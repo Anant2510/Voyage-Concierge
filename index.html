@@ -1,0 +1,2612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voyage Concierge — How It Works</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy-900: #0f2658;
+    --navy-800: #1e3a8a;
+    --navy-700: #1e40af;
+    --blue-600: #2563eb;
+    --blue-500: #3b82f6;
+    --blue-50: #eff6ff;
+    --blue-100: #dbeafe;
+    --teal-600: #0d9488;
+    --teal-50: #f0fdfa;
+    --teal-100: #ccfbf1;
+    --green-700: #15803d;
+    --green-600: #16a34a;
+    --green-50: #f0fdf4;
+    --green-100: #dcfce7;
+    --orange-700: #c2410c;
+    --orange-600: #ea580c;
+    --orange-50: #fff7ed;
+    --orange-100: #ffedd5;
+    --purple-700: #6d28d9;
+    --purple-600: #7c3aed;
+    --purple-50: #faf5ff;
+    --purple-100: #ede9fe;
+    --pink-700: #be185d;
+    --pink-600: #db2777;
+    --pink-50: #fdf2f8;
+    --pink-100: #fce7f3;
+    --amber-700: #b45309;
+    --amber-600: #d97706;
+    --amber-50: #fffbeb;
+    --amber-100: #fef3c7;
+    --red-700: #b91c1c;
+    --red-600: #dc2626;
+    --red-50: #fef2f2;
+    --red-100: #fee2e2;
+    --slate-900: #0f172a;
+    --slate-800: #1e293b;
+    --slate-700: #334155;
+    --slate-600: #475569;
+    --slate-500: #64748b;
+    --slate-400: #94a3b8;
+    --slate-300: #cbd5e1;
+    --slate-200: #e2e8f0;
+    --slate-100: #f1f5f9;
+    --slate-50: #f8fafc;
+    --white: #ffffff;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--slate-50);
+    min-height: 100vh;
+    color: var(--slate-900);
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--slate-300); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--slate-400); }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ============ HEADER ============ */
+  .header {
+    background: var(--white);
+    border-bottom: 1px solid var(--slate-200);
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  }
+
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .header-logo {
+    width: 44px;
+    height: 44px;
+    background: var(--navy-800);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .header-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--slate-900);
+    letter-spacing: -0.2px;
+  }
+
+  .header-subtitle {
+    font-size: 12px;
+    color: var(--slate-500);
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .header-restart {
+    background: var(--white);
+    color: var(--slate-700);
+    border: 1px solid var(--slate-300);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+
+  .header-restart:hover {
+    background: var(--slate-50);
+    border-color: var(--slate-400);
+  }
+
+  /* ============ STEP NAV ============ */
+  .step-nav-wrapper {
+    background: var(--white);
+    border-bottom: 1px solid var(--slate-200);
+    padding: 0 32px;
+    overflow-x: auto;
+  }
+
+  .step-nav {
+    display: flex;
+    gap: 0;
+    min-width: max-content;
+  }
+
+  .step-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 14px 18px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--slate-500);
+    font-weight: 500;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+  }
+
+  .step-tab:hover {
+    color: var(--slate-900);
+    background: var(--slate-50);
+  }
+
+  .step-tab.active {
+    color: var(--navy-800);
+    border-bottom-color: var(--navy-800);
+    font-weight: 600;
+  }
+
+  .step-tab.completed { color: var(--slate-700); }
+  .step-tab.completed .step-num { background: var(--slate-700); color: white; }
+
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    background: var(--slate-200);
+    color: var(--slate-500);
+    flex-shrink: 0;
+  }
+
+  .step-tab.active .step-num {
+    background: var(--navy-800);
+    color: white;
+  }
+
+  /* ============ MAIN LAYOUT ============ */
+  .main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 24px;
+    padding: 24px 32px 48px;
+    max-width: 1500px;
+    margin: 0 auto;
+    align-items: start;
+  }
+
+  .step-content {
+    animation: slideUp 0.4s ease;
+    min-width: 0;
+  }
+
+  /* ============ DAY BANNER ============ */
+  .banner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+
+  .banner-pill {
+    background: var(--navy-800);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 12px;
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+  }
+
+  .banner-text {
+    font-size: 14px;
+    color: var(--slate-700);
+    line-height: 1.5;
+  }
+
+  .banner-text strong { color: var(--slate-900); font-weight: 600; }
+
+  /* ============ AGENT INFO CARD ============ */
+  .agent-info {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-left: 4px solid var(--navy-800);
+    border-radius: 0 10px 10px 0;
+    padding: 18px 22px;
+    margin-bottom: 24px;
+  }
+
+  .agent-info-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--navy-800);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .agent-info-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--slate-900);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .agent-info-text {
+    font-size: 13px;
+    color: var(--slate-600);
+    line-height: 1.65;
+  }
+
+  .agent-info-text strong { color: var(--slate-900); font-weight: 600; }
+
+  /* ============ CARD ============ */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .card-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--slate-500);
+    margin-bottom: 10px;
+  }
+
+  /* ============ DOMAIN BADGES ============ */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 14px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    border: 1px solid;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .badge-instagram { background: var(--pink-50); color: var(--pink-700); border-color: var(--pink-100); }
+  .badge-reddit { background: var(--orange-50); color: var(--orange-700); border-color: var(--orange-100); }
+  .badge-cdp { background: var(--green-50); color: var(--green-700); border-color: var(--green-100); }
+  .badge-ai { background: var(--purple-50); color: var(--purple-700); border-color: var(--purple-100); }
+  .badge-jo { background: var(--amber-50); color: var(--amber-700); border-color: var(--amber-100); }
+  .badge-email { background: var(--blue-50); color: var(--navy-800); border-color: var(--blue-100); }
+  .badge-sms { background: var(--teal-50); color: var(--teal-600); border-color: var(--teal-100); }
+  .badge-website { background: var(--slate-100); color: var(--slate-700); border-color: var(--slate-200); }
+  .badge-ads { background: var(--amber-50); color: var(--amber-700); border-color: var(--amber-100); }
+  .badge-google { background: var(--blue-50); color: var(--blue-600); border-color: var(--blue-100); }
+
+  /* ============ PERSONA CARD ============ */
+  .persona-card {
+    background: var(--navy-800);
+    border-radius: 14px;
+    padding: 28px;
+    color: white;
+    margin-bottom: 20px;
+  }
+
+  .persona-header {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 20px;
+  }
+
+  .persona-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .persona-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+  }
+
+  .persona-meta {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .persona-occupation {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.95);
+    line-height: 1.5;
+  }
+
+  .persona-grid {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+
+  .persona-grid-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 13px;
+  }
+
+  .persona-grid-row:last-child { border-bottom: none; }
+
+  .persona-grid-key {
+    color: rgba(255, 255, 255, 0.7);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .persona-grid-val {
+    color: white;
+    font-weight: 600;
+    text-align: right;
+  }
+
+  /* ============ BUTTONS ============ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--navy-800);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+
+  .btn:hover { background: var(--navy-900); }
+
+  .btn-outline {
+    background: var(--white);
+    color: var(--navy-800);
+    border: 1px solid var(--slate-300);
+  }
+
+  .btn-outline:hover { background: var(--slate-50); border-color: var(--navy-800); }
+
+  /* ============ CDP SIDE PANEL ============ */
+  .cdp-panel {
+    position: sticky;
+    top: 16px;
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  }
+
+  .cdp-header {
+    background: var(--slate-50);
+    border-bottom: 1px solid var(--slate-200);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .cdp-header-title {
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--slate-900);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .cdp-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--green-50);
+    color: var(--green-700);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+    border: 1px solid var(--green-100);
+  }
+
+  .cdp-status-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--green-600);
+    border-radius: 50%;
+    animation: pulse-dot 1.6s infinite;
+  }
+
+  .cdp-events {
+    max-height: 580px;
+    overflow-y: auto;
+    padding: 12px 16px;
+  }
+
+  .cdp-event {
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--slate-200);
+    animation: slideUp 0.3s ease;
+  }
+
+  .cdp-event:last-child { border-bottom: none; }
+
+  .cdp-event-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+
+  .cdp-event-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--slate-500);
+    font-weight: 600;
+  }
+
+  .cdp-event-text {
+    font-size: 12.5px;
+    color: var(--slate-700);
+    line-height: 1.5;
+  }
+
+  .cdp-empty {
+    text-align: center;
+    padding: 32px 16px;
+    color: var(--slate-400);
+    font-size: 12px;
+  }
+
+  /* ============ DATA GRID ============ */
+  .data-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .data-cell {
+    background: var(--slate-50);
+    border: 1px solid var(--slate-200);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .data-cell-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--slate-500);
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .data-cell-value {
+    font-size: 13.5px;
+    color: var(--slate-900);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  /* ============ STAT CARDS ============ */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--slate-500);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--navy-800);
+    line-height: 1;
+  }
+
+  .stat-value-green { color: var(--green-700); }
+  .stat-value-orange { color: var(--orange-700); }
+
+  .stat-sublabel {
+    font-size: 11px;
+    color: var(--slate-500);
+    font-weight: 500;
+    margin-top: 4px;
+  }
+
+  /* ============ INSTAGRAM POST MOCKUP ============ */
+  .ig-post {
+    max-width: 360px;
+    margin: 0 auto 20px;
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .ig-post-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--slate-100);
+  }
+
+  .ig-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--pink-100);
+    color: var(--pink-700);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .ig-username {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--slate-900);
+  }
+
+  .ig-location {
+    font-size: 11px;
+    color: var(--slate-500);
+  }
+
+  .ig-image {
+    background: var(--slate-100);
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--slate-400);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .ig-caption {
+    padding: 14px;
+  }
+
+  .ig-actions {
+    display: flex;
+    gap: 16px;
+    padding-bottom: 8px;
+    color: var(--slate-700);
+  }
+
+  .ig-stats {
+    font-size: 12px;
+    color: var(--slate-700);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .ig-text {
+    font-size: 13px;
+    color: var(--slate-900);
+    line-height: 1.5;
+  }
+
+  .ig-text strong { font-weight: 600; }
+
+  .ig-meta {
+    font-size: 11px;
+    color: var(--slate-500);
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    font-weight: 500;
+  }
+
+  /* ============ EMAIL MOCKUP ============ */
+  .email-mockup {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .email-header {
+    background: var(--slate-50);
+    border-bottom: 1px solid var(--slate-200);
+    padding: 14px 18px;
+  }
+
+  .email-meta-row {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--slate-600);
+    margin-bottom: 4px;
+  }
+
+  .email-meta-row strong { color: var(--slate-900); font-weight: 600; }
+
+  .email-subject {
+    font-size: 14px;
+    color: var(--slate-900);
+    font-weight: 600;
+    margin-top: 4px;
+  }
+
+  .email-body {
+    padding: 18px;
+    font-size: 13.5px;
+    color: var(--slate-700);
+    line-height: 1.7;
+  }
+
+  .email-body strong { color: var(--slate-900); font-weight: 600; }
+
+  .email-engagement {
+    background: var(--green-50);
+    border-top: 1px solid var(--green-100);
+    padding: 10px 18px;
+    font-size: 12px;
+    color: var(--green-700);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ============ SMS MOCKUP ============ */
+  .sms-mockup {
+    background: #ebebef;
+    border-radius: 10px;
+    padding: 16px;
+    border: 1px solid var(--slate-200);
+  }
+
+  .sms-from {
+    text-align: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #d8d8de;
+    margin-bottom: 12px;
+  }
+
+  .sms-from-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--slate-900);
+  }
+
+  .sms-from-number {
+    font-size: 10px;
+    color: var(--slate-500);
+    font-family: 'JetBrains Mono', monospace;
+    margin-top: 2px;
+  }
+
+  .sms-bubble {
+    background: white;
+    border-radius: 16px 16px 16px 4px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    max-width: 88%;
+    font-size: 13px;
+    color: var(--slate-900);
+    line-height: 1.5;
+  }
+
+  .sms-bubble-link {
+    color: var(--blue-600);
+    text-decoration: underline;
+  }
+
+  .sms-time {
+    font-size: 10px;
+    color: var(--slate-500);
+    text-align: right;
+    margin-top: 4px;
+  }
+
+  .sms-disclaimer {
+    text-align: center;
+    font-size: 10px;
+    color: var(--slate-500);
+    padding-top: 8px;
+  }
+
+  /* ============ CHAT BUBBLE ============ */
+  .chat-thread {
+    background: var(--slate-50);
+    border-radius: 10px;
+    padding: 16px;
+    border: 1px solid var(--slate-200);
+  }
+
+  .chat-msg {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+
+  .chat-msg:last-child { margin-bottom: 0; }
+
+  .chat-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .chat-avatar-user {
+    background: var(--pink-100);
+    color: var(--pink-700);
+  }
+
+  .chat-avatar-ai {
+    background: var(--navy-800);
+    color: white;
+  }
+
+  .chat-bubble {
+    border-radius: 12px;
+    padding: 12px 16px;
+    max-width: 80%;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+
+  .chat-bubble-user {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    color: var(--slate-900);
+    border-radius: 12px 12px 12px 4px;
+  }
+
+  .chat-bubble-ai {
+    background: var(--navy-800);
+    color: white;
+    border-radius: 12px 12px 4px 12px;
+  }
+
+  .chat-bubble-ai strong { color: white; font-weight: 600; }
+  .chat-bubble-user strong { color: var(--slate-900); font-weight: 600; }
+
+  .chat-bubble-success {
+    background: var(--green-700);
+    color: white;
+    border-radius: 12px 12px 4px 12px;
+  }
+
+  .tool-call {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    margin: 8px 0;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  /* ============ TIMELINE / JOURNEY ============ */
+  .timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .timeline-item {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--slate-100);
+    align-items: center;
+    animation: slideUp 0.3s ease;
+  }
+
+  .timeline-item:last-child { border-bottom: none; }
+
+  .timeline-day {
+    min-width: 64px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    color: var(--slate-500);
+  }
+
+  .timeline-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .timeline-text {
+    flex: 1;
+    font-size: 13px;
+    color: var(--slate-700);
+    line-height: 1.5;
+  }
+
+  /* ============ HOOK CHIPS ============ */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    background: var(--slate-100);
+    color: var(--slate-700);
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    margin: 0 4px 4px 0;
+    border: 1px solid var(--slate-200);
+  }
+
+  .chip-purple { background: var(--purple-50); color: var(--purple-700); border-color: var(--purple-100); }
+  .chip-blue { background: var(--blue-50); color: var(--navy-800); border-color: var(--blue-100); }
+  .chip-green { background: var(--green-50); color: var(--green-700); border-color: var(--green-100); }
+  .chip-amber { background: var(--amber-50); color: var(--amber-700); border-color: var(--amber-100); }
+
+  /* ============ SECTION HEADING ============ */
+  .section-h {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--slate-900);
+    margin: 24px 0 12px;
+    letter-spacing: -0.1px;
+  }
+
+  /* ============ TWO COLUMN ============ */
+  .two-col {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  /* ============ HIGHLIGHT BLOCK ============ */
+  .highlight {
+    background: var(--blue-50);
+    border: 1px solid var(--blue-100);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 16px 0;
+  }
+
+  .highlight-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--navy-800);
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .highlight-text {
+    font-size: 13.5px;
+    color: var(--slate-900);
+    line-height: 1.65;
+  }
+
+  /* ============ HOT LEAD CARD ============ */
+  .hot-card {
+    background: var(--red-50);
+    border: 1px solid var(--red-100);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .hot-card-content { flex: 1; }
+
+  .hot-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--red-700);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .hot-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--slate-900);
+    margin-bottom: 4px;
+  }
+
+  .hot-text {
+    font-size: 13px;
+    color: var(--slate-700);
+    line-height: 1.5;
+  }
+
+  .score-display {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+
+  .score-block {
+    text-align: center;
+  }
+
+  .score-block-label {
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--slate-500);
+    font-weight: 700;
+    letter-spacing: 0.8px;
+  }
+
+  .score-block-value {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    margin-top: 4px;
+  }
+
+  .score-amber { color: var(--amber-600); }
+  .score-red { color: var(--red-700); }
+
+  .score-arrow {
+    font-size: 20px;
+    color: var(--slate-400);
+  }
+
+  /* ============ HANDOFF CARD ============ */
+  .handoff-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .handoff-cell {
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    border: 1px solid;
+  }
+
+  .handoff-cell-from {
+    background: var(--amber-50);
+    border-color: var(--amber-100);
+  }
+
+  .handoff-cell-to {
+    background: var(--purple-50);
+    border-color: var(--purple-100);
+  }
+
+  .handoff-icon {
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
+
+  .handoff-name {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .handoff-name-from { color: var(--amber-700); }
+  .handoff-name-to { color: var(--purple-700); }
+
+  .handoff-status {
+    font-size: 11px;
+    color: var(--slate-600);
+    margin-top: 4px;
+  }
+
+  .handoff-arrow {
+    font-size: 24px;
+    color: var(--slate-400);
+  }
+
+  /* ============ FOOTER SUMMARY ============ */
+  .summary-card {
+    background: var(--navy-800);
+    border-radius: 12px;
+    padding: 28px 32px;
+    text-align: center;
+    color: white;
+    margin-top: 16px;
+  }
+
+  .summary-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .summary-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+  }
+
+  .summary-subtitle {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.6;
+  }
+
+  .summary-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    margin: 16px 0 0;
+    padding-top: 16px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.6;
+  }
+
+  .summary-divider strong { color: white; font-weight: 700; }
+
+  /* ============ SOURCE GRID (CDP step) ============ */
+  .source-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .source-card {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+
+  .source-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--slate-900);
+    margin-top: 6px;
+    margin-bottom: 2px;
+  }
+
+  .source-card-detail {
+    font-size: 11.5px;
+    color: var(--slate-500);
+    line-height: 1.4;
+  }
+
+  /* ============ CAMPAIGN STATS ============ */
+  .campaign-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 16px 0;
+  }
+
+  .campaign-stat {
+    background: var(--slate-50);
+    border: 1px solid var(--slate-200);
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+  }
+
+  .campaign-stat-label {
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--slate-500);
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+
+  .campaign-stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy-800);
+    margin-top: 4px;
+    line-height: 1;
+  }
+
+  .campaign-stat-sublabel {
+    font-size: 10px;
+    color: var(--slate-500);
+    margin-top: 2px;
+    font-weight: 500;
+  }
+
+  /* ============ SEQUENCE LIST ============ */
+  .sequence {
+    background: var(--slate-50);
+    border-radius: 10px;
+    padding: 14px 16px;
+    border: 1px solid var(--slate-200);
+  }
+
+  .sequence-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--slate-100);
+    font-size: 12.5px;
+  }
+
+  .sequence-row:last-child { border-bottom: none; }
+
+  .sequence-day {
+    background: var(--navy-800);
+    color: white;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 5px;
+    font-size: 11px;
+    min-width: 56px;
+    text-align: center;
+  }
+
+  .sequence-text {
+    color: var(--slate-700);
+    flex: 1;
+  }
+
+  /* ============ ITINERARY BLOCK ============ */
+  .itinerary {
+    background: var(--white);
+    border-left: 3px solid var(--navy-800);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 16px;
+    margin: 12px 0;
+    border-top: 1px solid var(--slate-200);
+    border-right: 1px solid var(--slate-200);
+    border-bottom: 1px solid var(--slate-200);
+  }
+
+  .itinerary-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--navy-800);
+    margin-bottom: 8px;
+  }
+
+  .itinerary-row {
+    font-size: 12.5px;
+    color: var(--slate-700);
+    line-height: 1.7;
+  }
+
+  .itinerary-row strong { color: var(--slate-900); font-weight: 600; }
+
+  /* ============ PRICING ROW ============ */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 12px 0;
+  }
+
+  .pricing-cell {
+    background: var(--white);
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--slate-200);
+  }
+
+  .pricing-label {
+    font-size: 10px;
+    color: var(--slate-500);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .pricing-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--slate-900);
+    margin-top: 4px;
+  }
+
+  .pricing-sub {
+    font-size: 11px;
+    color: var(--green-700);
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  /* ============ TOOLS GRID ============ */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .tool-cell {
+    background: var(--slate-50);
+    border: 1px solid var(--slate-200);
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .tool-cell-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .tool-cell-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--slate-900);
+    margin-bottom: 2px;
+  }
+
+  .tool-cell-desc {
+    font-size: 11px;
+    color: var(--slate-500);
+    line-height: 1.4;
+  }
+
+  /* ============ SYSTEM CARD ============ */
+  .system-card {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+
+  .system-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--slate-900);
+    margin-bottom: 4px;
+  }
+
+  .system-card-desc {
+    font-size: 12px;
+    color: var(--slate-600);
+    line-height: 1.55;
+  }
+
+  /* ============ CUSTOMER FINAL CARD ============ */
+  .customer-card {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+  }
+
+  .customer-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--navy-800);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .customer-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--slate-900);
+    margin-bottom: 3px;
+  }
+
+  .customer-meta {
+    font-size: 12px;
+    color: var(--slate-500);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 8px;
+  }
+
+  .customer-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .customer-tag {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid;
+  }
+
+  .tag-green { background: var(--green-50); color: var(--green-700); border-color: var(--green-100); }
+  .tag-purple { background: var(--purple-50); color: var(--purple-700); border-color: var(--purple-100); }
+  .tag-blue { background: var(--blue-50); color: var(--navy-800); border-color: var(--blue-100); }
+
+  .customer-amount {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .customer-amount-label {
+    font-size: 12px;
+    color: var(--green-700);
+    font-weight: 600;
+  }
+
+  .customer-amount-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--slate-900);
+    margin: 2px 0;
+  }
+
+  .customer-amount-meta {
+    font-size: 11px;
+    color: var(--slate-500);
+  }
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-brand">
+    <div class="header-logo">V</div>
+    <div>
+      <div class="header-title">Voyage Concierge</div>
+      <div class="header-subtitle">Agentic AI · Travel lead lifecycle walkthrough</div>
+    </div>
+  </div>
+  <button class="header-restart" onclick="resetDemo()">Restart</button>
+</div>
+
+<div class="step-nav-wrapper">
+  <div class="step-nav" id="step-nav"></div>
+</div>
+
+<div class="main">
+  <div id="step-content" class="step-content"></div>
+
+  <aside class="cdp-panel">
+    <div class="cdp-header">
+      <div class="cdp-header-title">Customer Data Platform</div>
+      <div class="cdp-status">
+        <span class="cdp-status-dot"></span>
+        <span>LIVE</span>
+      </div>
+    </div>
+    <div class="cdp-events" id="cdp-events">
+      <div class="cdp-empty">Awaiting first signal...</div>
+    </div>
+  </aside>
+</div>
+
+<script>
+let currentStep = 0;
+let cdpEvents = [];
+
+const PERSONA = {
+  name: "Sarah Mitchell",
+  age: 32,
+  city: "Austin, TX",
+  zip: "78704",
+  occupation: "Marketing Director, SaaS startup",
+  household: "Single, no children",
+  income: "USD 145,000 to 165,000 / year",
+  email: "sarah.mitchell92@gmail.com",
+  phone: "+1 512-555-0184",
+  travel_history: "Cancun (Jan 2023), Park City (Mar 2022), Tokyo (Sep 2024)",
+  segment: "Premium Solo Traveler",
+  ltv_estimate: "USD 8,500 over 5 years"
+};
+
+const STEPS = [
+  { n: 1, label: "Persona" },
+  { n: 2, label: "Signal" },
+  { n: 3, label: "AI analysis" },
+  { n: 4, label: "Profile build" },
+  { n: 5, label: "Strategy" },
+  { n: 6, label: "Email + SMS" },
+  { n: 7, label: "Retargeting" },
+  { n: 8, label: "Hot lead" },
+  { n: 9, label: "Handoff" },
+  { n: 10, label: "Booking" },
+  { n: 11, label: "Recap" }
+];
+
+function addCDPEvent(text, domain, time) {
+  cdpEvents.push({ text, domain, time });
+  renderCDPPanel();
+}
+
+function renderCDPPanel() {
+  const container = document.getElementById('cdp-events');
+  if (cdpEvents.length === 0) {
+    container.innerHTML = '<div class="cdp-empty">Awaiting first signal...</div>';
+    return;
+  }
+  container.innerHTML = cdpEvents.map(e => `
+    <div class="cdp-event">
+      <div class="cdp-event-meta">
+        <span class="badge badge-${e.domain}">${getDomainLabel(e.domain)}</span>
+        <span class="cdp-event-time">${e.time}</span>
+      </div>
+      <div class="cdp-event-text">${e.text}</div>
+    </div>
+  `).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function getDomainLabel(d) {
+  const map = {
+    instagram: 'Instagram',
+    reddit: 'Reddit',
+    cdp: 'CDP',
+    ai: 'LLM agent',
+    jo: 'Orchestrator',
+    email: 'Email',
+    sms: 'SMS',
+    website: 'Web',
+    ads: 'Ads',
+    google: 'Google'
+  };
+  return map[d] || d;
+}
+
+function getDomainColor(d) {
+  const map = {
+    instagram: '#db2777',
+    reddit: '#ea580c',
+    cdp: '#15803d',
+    ai: '#7c3aed',
+    jo: '#d97706',
+    email: '#1e40af',
+    sms: '#0d9488',
+    website: '#475569',
+    ads: '#d97706',
+    google: '#2563eb'
+  };
+  return map[d] || '#475569';
+}
+
+function renderStepNav() {
+  const nav = document.getElementById('step-nav');
+  nav.innerHTML = STEPS.map((s, i) => {
+    const cls = i === currentStep ? 'active' : (i < currentStep ? 'completed' : '');
+    return `<button class="step-tab ${cls}" onclick="goToStep(${i})"><span class="step-num">${s.n}</span>${s.label}</button>`;
+  }).join('');
+}
+
+function banner(pill, text, color) {
+  const bg = color || 'var(--navy-800)';
+  return `<div class="banner"><div class="banner-pill" style="background:${bg};">${pill}</div><div class="banner-text">${text}</div></div>`;
+}
+
+function nextBtn(label) {
+  return `<button class="btn" onclick="goToStep(currentStep + 1)" style="margin-top: 20px;">${label || 'Continue →'}</button>`;
+}
+
+function badge(domain) {
+  return `<span class="badge badge-${domain}">${getDomainLabel(domain)}</span>`;
+}
+
+// ============================================================
+// STEP 1 — Meet the persona
+// ============================================================
+function renderStep1() {
+  return `
+    ${banner('Pre-discovery', 'Meet our lead. Before any of this happens, she is just a stranger to us.')}
+
+    <div class="persona-card">
+      <div class="persona-header">
+        <div class="persona-avatar">SM</div>
+        <div style="flex:1; min-width:0;">
+          <div class="persona-name">${PERSONA.name}</div>
+          <div class="persona-meta">${PERSONA.age} · ${PERSONA.city} · ${PERSONA.segment}</div>
+          <div class="persona-occupation">${PERSONA.occupation} · ${PERSONA.household}</div>
+        </div>
+      </div>
+      <div class="persona-grid">
+        <div class="persona-grid-row">
+          <span class="persona-grid-key">Annual income</span>
+          <span class="persona-grid-val">${PERSONA.income}</span>
+        </div>
+        <div class="persona-grid-row">
+          <span class="persona-grid-key">Travel history</span>
+          <span class="persona-grid-val">${PERSONA.travel_history}</span>
+        </div>
+        <div class="persona-grid-row">
+          <span class="persona-grid-key">Lead tier</span>
+          <span class="persona-grid-val">High value</span>
+        </div>
+        <div class="persona-grid-row">
+          <span class="persona-grid-key">Projected lifetime value</span>
+          <span class="persona-grid-val">${PERSONA.ltv_estimate}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">The business challenge</div>
+      <div style="font-size:13.5px; color:var(--slate-700); line-height:1.7;">
+        Sarah is the kind of customer travel companies dream of. High disposable income, frequent traveler, premium tastes.
+        But <strong style="color:var(--slate-900);">she has never visited our website</strong>. She does not know we exist.
+        She is about to start dreaming about her next vacation, and she will do that on social media, not on travel sites.
+        <br><br>
+        <span style="color:var(--navy-800); font-weight:600;">The question:</span> how do we discover her, earn her trust,
+        and convert her into a customer without her ever filling out a "Request a quote" form?
+      </div>
+    </div>
+
+    ${nextBtn('Show me how →')}
+  `;
+}
+
+// ============================================================
+// STEP 2 — Discovery signal
+// ============================================================
+function renderStep2() {
+  setTimeout(() => {
+    if (cdpEvents.length === 0) {
+      addCDPEvent('Public Instagram post detected via social listening API', 'instagram', 'T+0s');
+      setTimeout(() => addCDPEvent('Hashtags matched: #wanderlust #travelplanning', 'instagram', 'T+1s'), 400);
+      setTimeout(() => addCDPEvent('Geo-tag captured: Austin, TX', 'instagram', 'T+1s'), 800);
+    }
+  }, 300);
+
+  return `
+    ${banner('Day 0 · 9:47 AM CT', 'Sarah posts on Instagram. The Lead Discovery agent picks it up in seconds.', 'var(--pink-600)')}
+
+    <div class="agent-info">
+      <div class="agent-info-label">Lead Discovery agent</div>
+      <div class="agent-info-title">Always-on social listening</div>
+      <div class="agent-info-text">
+        We monitor public posts across <strong>Instagram, Reddit, X (Twitter), TikTok, and Facebook public groups</strong>
+        through their official partner APIs and licensed social listening platforms (Brandwatch, Sprinklr, Talkwalker).
+        Travel-intent keywords, hashtags, and geo-tags trigger capture.
+      </div>
+    </div>
+
+    <div class="ig-post">
+      <div class="ig-post-header">
+        <div class="ig-avatar">SM</div>
+        <div style="flex:1; min-width:0;">
+          <div class="ig-username">@sarah.wanders</div>
+          <div class="ig-location">Austin, TX</div>
+        </div>
+        <div style="font-size:11px; color:var(--slate-500); font-weight:500;">9:47 AM</div>
+      </div>
+      <div class="ig-image">[ Mountain photo ]</div>
+      <div class="ig-caption">
+        <div class="ig-stats">47 likes · 12 comments</div>
+        <div class="ig-text">
+          Q4 broke me. Need to disappear into the mountains for a week. Anyone done <strong>Banff or Jackson Hole</strong>
+          in the off-season? Want crisp air, no crowds, real silence. Cancun was fun but I need altitude this time.
+          #wanderlust #travelplanning #burnout
+        </div>
+        <div class="ig-meta">Public · Visible to social listening tools</div>
+      </div>
+    </div>
+
+    <div class="card" style="background:var(--green-50); border-color:var(--green-100);">
+      <div class="card-label" style="color:var(--green-700);">Signal captured · 47 milliseconds</div>
+      <div style="font-size:13.5px; color:var(--slate-700); line-height:1.7;">
+        Even though Sarah does not know us, we now have three high-value signals from one post:
+        <strong style="color:var(--slate-900);">active travel intent</strong>,
+        <strong style="color:var(--slate-900);">two specific destinations in mind</strong>, and
+        <strong style="color:var(--slate-900);">post-Q4 burnout context</strong>.
+      </div>
+    </div>
+
+    ${nextBtn()}
+  `;
+}
+
+// ============================================================
+// STEP 3 — AI Analysis (uses LLM agent)
+// ============================================================
+function renderStep3() {
+  setTimeout(() => {
+    addCDPEvent('LLM agent analyzing post: intent, sentiment, budget signals', 'ai', 'T+2s');
+    setTimeout(() => addCDPEvent('Intent score computed: 78 of 100 (medium-high)', 'ai', 'T+4s'), 400);
+    setTimeout(() => addCDPEvent('7 personalization hooks extracted from post text', 'ai', 'T+5s'), 800);
+  }, 300);
+
+  return `
+    ${banner('Day 0 · 9:47:03 AM CT', 'A large language model turns the messy post into structured intent data.', 'var(--purple-600)')}
+
+    <div class="agent-info">
+      <div class="agent-info-label">AI-powered signal analysis</div>
+      <div class="agent-info-title">From unstructured text to structured intelligence</div>
+      <div class="agent-info-text">
+        A large language model reads the post and extracts <strong>intent score, trip type, destinations, urgency,
+        budget tier, and travel window</strong>. What was a 280-character caption becomes a structured lead profile
+        in 3 seconds, ready for downstream systems.
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-label">Input · Raw signal</div>
+        <div style="background:var(--slate-50); border-left:3px solid var(--pink-600); padding:12px 14px; border-radius:0 8px 8px 0; font-size:13px; color:var(--slate-700); line-height:1.6; font-style:italic;">
+          "Q4 broke me. Need to disappear into the mountains for a week. Anyone done Banff or Jackson Hole
+          in the off-season? Want crisp air, no crowds, real silence. Cancun was fun but I need altitude this time."
+        </div>
+      </div>
+
+      <div class="card" style="border-color:var(--purple-100);">
+        <div class="card-label" style="color:var(--purple-700);">Output · Structured intelligence</div>
+        <div class="data-grid" style="grid-template-columns:1fr 1fr;">
+          <div class="data-cell"><div class="data-cell-label">Intent score</div><div class="data-cell-value">78 / 100</div></div>
+          <div class="data-cell"><div class="data-cell-label">Tier</div><div class="data-cell-value">Medium-high</div></div>
+          <div class="data-cell"><div class="data-cell-label">Trip type</div><div class="data-cell-value">Solo · Mountain</div></div>
+          <div class="data-cell"><div class="data-cell-label">Urgency</div><div class="data-cell-value">High</div></div>
+          <div class="data-cell"><div class="data-cell-label">Window</div><div class="data-cell-value">30 to 60 days</div></div>
+          <div class="data-cell"><div class="data-cell-label">Budget</div><div class="data-cell-value">USD 3-5K (premium)</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="color:var(--purple-700);">Personalization hooks identified</div>
+      <div>
+        <span class="chip chip-purple">Q4 burnout context</span>
+        <span class="chip chip-purple">Mountains, not beaches</span>
+        <span class="chip chip-purple">Solo female traveler</span>
+        <span class="chip chip-purple">Quiet and remote</span>
+        <span class="chip chip-purple">Photography opportunity</span>
+        <span class="chip chip-purple">Off-season preference</span>
+        <span class="chip chip-purple">Time-strapped executive</span>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <div class="highlight-label">AI-recommended first message</div>
+      <div class="highlight-text" style="font-style:italic;">
+        "Hi Sarah, saw your Banff and Jackson Hole post. Q4 takes its toll, and the Rockies have a way of resetting everything.
+        We just had a photographer return from Banff's Lake Louise region last week with the kind of golden-larch silence
+        you can only get in October. Want to see what 6 days off the grid would look like?"
+      </div>
+    </div>
+
+    ${nextBtn()}
+  `;
+}
+
+// ============================================================
+// STEP 4 — Profile Build (CDP) with REAL signal sources
+// ============================================================
+function renderStep4() {
+  setTimeout(() => {
+    addCDPEvent('Identity stitching across email, mobile, and social', 'cdp', 'T+8s');
+    setTimeout(() => addCDPEvent('Match found: existing email open from 2023 newsletter', 'cdp', 'T+10s'), 400);
+    setTimeout(() => addCDPEvent('Profile saved: lead_id=VC_8472, status=DISCOVERED', 'cdp', 'T+12s'), 800);
+  }, 300);
+
+  return `
+    ${banner('Day 0 · 9:47:15 AM CT', 'The CDP stitches scattered signals into one unified lead profile.', 'var(--green-600)')}
+
+    <div class="agent-info">
+      <div class="agent-info-label">Customer Data Platform (CDP)</div>
+      <div class="agent-info-title">One profile, built from many real-world data sources</div>
+      <div class="agent-info-text">
+        The CDP combines <strong>first-party signals</strong> (data we own), <strong>second-party signals</strong>
+        (partner data we license), and <strong>publicly available signals</strong> (open social posts, search trends)
+        to build a single profile. No login required from Sarah.
+      </div>
+    </div>
+
+    <div class="card" style="border-color:var(--blue-100); background:var(--blue-50);">
+      <div style="display:flex; align-items:center; gap:14px; margin-bottom:14px;">
+        <div style="width:48px; height:48px; border-radius:50%; background:var(--navy-800); color:white; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px;">SM</div>
+        <div>
+          <div style="font-size:16px; font-weight:700; color:var(--slate-900);">${PERSONA.name}</div>
+          <div style="font-size:11px; color:var(--slate-600); font-family:'JetBrains Mono', monospace; margin-top:2px;">lead_id: VC_8472</div>
+        </div>
+      </div>
+      <div class="data-grid">
+        <div class="data-cell"><div class="data-cell-label">Email</div><div class="data-cell-value" style="font-size:12px;">${PERSONA.email}</div></div>
+        <div class="data-cell"><div class="data-cell-label">Mobile</div><div class="data-cell-value" style="font-size:12px;">${PERSONA.phone}</div></div>
+        <div class="data-cell"><div class="data-cell-label">ZIP</div><div class="data-cell-value">${PERSONA.zip}</div></div>
+        <div class="data-cell"><div class="data-cell-label">Segment</div><div class="data-cell-value">Premium · Solo</div></div>
+      </div>
+    </div>
+
+    <div class="section-h">Where each signal came from</div>
+
+    <div class="source-grid">
+      <div class="source-card">
+        ${badge('instagram')}
+        <div class="source-card-title">Instagram public post</div>
+        <div class="source-card-detail">Caption text · hashtags · geo-tag · public profile data via Meta Graph API</div>
+      </div>
+      <div class="source-card">
+        <span class="badge badge-website">Mailing list</span>
+        <div class="source-card-title">Email match</div>
+        <div class="source-card-detail">Sarah's email opened our 2023 newsletter (cross-reference via hashed ID)</div>
+      </div>
+      <div class="source-card">
+        <span class="badge badge-google">Search trend</span>
+        <div class="source-card-title">Search co-occurrence</div>
+        <div class="source-card-detail">Region-level Google Trends shows "banff october" rising in Austin DMA</div>
+      </div>
+      <div class="source-card">
+        <span class="badge badge-ads">Identity provider</span>
+        <div class="source-card-title">Phone match</div>
+        <div class="source-card-detail">LiveRamp / Experian ID resolution from email + name + ZIP</div>
+      </div>
+      <div class="source-card">
+        ${badge('cdp')}
+        <div class="source-card-title">Demographics overlay</div>
+        <div class="source-card-detail">Acxiom or Experian demographic file — household income band, life stage</div>
+      </div>
+      <div class="source-card">
+        ${badge('cdp')}
+        <div class="source-card-title">Behavioral history</div>
+        <div class="source-card-detail">3 anonymous web visits (cookie ID stitched once email matched)</div>
+      </div>
+    </div>
+
+    <div class="card" style="background:var(--green-50); border-color:var(--green-100); margin-top:16px;">
+      <div style="font-size:13.5px; color:var(--green-700); font-weight:600; text-align:center;">
+        Identity stitched · Score 78 · 7 hooks · Ready for journey orchestration
+      </div>
+    </div>
+
+    ${nextBtn()}
+  `;
+}
+
+// ============================================================
+// STEP 5 — Strategy
+// ============================================================
+function renderStep5() {
+  setTimeout(() => {
+    addCDPEvent('Nurturing agent activated for lead VC_8472', 'jo', 'T+15s');
+    setTimeout(() => addCDPEvent('Multi-channel campaign generated: 5 touchpoints over 7 days', 'ai', 'T+18s'), 400);
+    setTimeout(() => addCDPEvent('Channels: email · SMS · Instagram DM · retargeting ads', 'jo', 'T+20s'), 800);
+  }, 300);
+
+  return `
+    ${banner('Day 0 · 9:47:30 AM CT', 'The Nurturing agent designs a 7-day journey across the right channels.', 'var(--amber-600)')}
+
+    <div class="agent-info">
+      <div class="agent-info-label">Nurturing agent + Journey Orchestrator</div>
+      <div class="agent-info-title">Right channel, right time, right message</div>
+      <div class="agent-info-text">
+        Generic email blasts get ignored. The Nurturing agent designs a campaign tailored to Sarah's specific signals.
+        Every touchpoint is generated by an LLM using her post as context. No templates.
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="text-align:center; margin-bottom:18px;">
+        <div class="card-label">Campaign strategy</div>
+        <div style="font-size:18px; font-weight:700; color:var(--slate-900); margin-top:4px;">"Rockies reset"</div>
+        <div style="font-size:12px; color:var(--slate-500); margin-top:4px;">7-day nurture sequence · 5 touchpoints · Multi-channel</div>
+      </div>
+
+      <div class="campaign-stats">
+        <div class="campaign-stat">
+          <div class="campaign-stat-label">Duration</div>
+          <div class="campaign-stat-value">7</div>
+          <div class="campaign-stat-sublabel">DAYS</div>
+        </div>
+        <div class="campaign-stat">
+          <div class="campaign-stat-label">Touchpoints</div>
+          <div class="campaign-stat-value">5</div>
+          <div class="campaign-stat-sublabel">MESSAGES</div>
+        </div>
+        <div class="campaign-stat">
+          <div class="campaign-stat-label">Conversion</div>
+          <div class="campaign-stat-value" style="color:var(--green-700);">68%</div>
+          <div class="campaign-stat-sublabel">EXPECTED</div>
+        </div>
+      </div>
+
+      <div class="sequence">
+        <div class="card-label" style="margin-bottom:8px;">Planned sequence</div>
+        <div class="sequence-row">
+          <div class="sequence-day">Day 1</div>
+          ${badge('email')}
+          <div class="sequence-text">Empathetic intro · "We saw your Banff post"</div>
+        </div>
+        <div class="sequence-row">
+          <div class="sequence-day">Day 2</div>
+          ${badge('sms')}
+          <div class="sequence-text">Photo links · Lake Louise larch season</div>
+        </div>
+        <div class="sequence-row">
+          <div class="sequence-day">Day 3</div>
+          ${badge('instagram')}
+          <div class="sequence-text">Soft retargeting · "5 trails locals keep quiet"</div>
+        </div>
+        <div class="sequence-row">
+          <div class="sequence-day">Day 5</div>
+          ${badge('email')}
+          <div class="sequence-text">Curated 6-day Banff itinerary preview</div>
+        </div>
+        <div class="sequence-row">
+          <div class="sequence-day">Day 7</div>
+          ${badge('sms')}
+          <div class="sequence-text">Limited offer · USD 400 off if booked this week</div>
+        </div>
+      </div>
+    </div>
+
+    ${nextBtn()}
+  `;
+}
+
+// ============================================================
+// STEP 6 — Email + SMS
+// ============================================================
+function renderStep6() {
+  setTimeout(() => {
+    addCDPEvent('Day 1 · email sent — subject: "The Rockies called"', 'email', 'Day 1');
+    setTimeout(() => addCDPEvent('Email opened — 3 hours after send', 'email', 'Day 1'), 400);
+    setTimeout(() => addCDPEvent('Day 2 · SMS delivered with short link', 'sms', 'Day 2'), 800);
+    setTimeout(() => addCDPEvent('SMS link clicked → 8 minutes on voyage.com', 'sms', 'Day 2'), 1200);
+  }, 300);
+
+  return `
+    ${banner('Day 1 to 2', "First touchpoints. Soft, empathetic, personalized to Sarah's exact words.", 'var(--blue-600)')}
+
+    <div class="agent-info">
+      <div class="agent-info-label">Nurturing agent in action</div>
+      <div class="agent-info-title">Different channel, same conversation</div>
+      <div class="agent-info-text">
+        Email establishes credibility. SMS creates immediacy. Both messages are LLM-generated using Sarah's post
+        as context — not a template selection.
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
+          ${badge('email')}
+          <span style="font-size:11px; color:var(--slate-500); font-family:'JetBrains Mono', monospace;">Day 1 · 8:30 AM CT</span>
+        </div>
+        <div class="email-mockup">
+          <div class="email-header">
+            <div class="email-meta-row">From: <strong>Maya at Voyage</strong></div>
+            <div class="email-meta-row">To: ${PERSONA.email}</div>
+            <div class="email-subject">The Rockies called. Did you answer?</div>
+          </div>
+          <div class="email-body">
+            Hey Sarah,<br><br>
+            Saw your post about Q4 burning you out and craving altitude. I get it — sometimes the only fix is the Rockies.
+            <br><br>
+            We had a photographer back from <strong>Banff's Lake Louise region</strong> last week. She caught the larches
+            turning gold. Said the silence at sunrise was the kind most people only read about. Three of her shots are attached
+            — no pitch, just thought you might want to see.
+            <br><br>
+            If you ever want help planning Banff or Jackson Hole without the tourist circuit, I am one reply away.
+            <br><br>
+            — Maya<br>
+            <span style="color:var(--slate-500); font-size:12px;">Voyage Concierge</span>
+          </div>
+          <div class="email-engagement">
+            <span>✓</span><span>Opened · 11:14 AM (3 hours after send)</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
+          ${badge('sms')}
+          <span style="font-size:11px; color:var(--slate-500); font-family:'JetBrains Mono', monospace;">Day 2 · 6:15 PM CT</span>
+        </div>
+        <div class="sms-mockup">
+          <div class="sms-from">
+            <div class="sms-from-name">Voyage Travel</div>
+            <div class="sms-from-number">+1 (888) 555-VOYAGE</div>
+          </div>
+          <div class="sms-bubble">
+            Hi Sarah, Maya from Voyage. Promised you those Lake Louise larch photos — here you go:
+            <span class="sms-bubble-link">vy.gg/banff-larch</span>
+            <div class="sms-time">6:15 PM</div>
+          </div>
+          <div class="sms-bubble">
+            No package, no pressure. If you want a 2-min outline of how 6 days in Banff could look, just reply "yes".
+            <div class="sms-time">6:15 PM</div>
+          </div>
+          <div class="sms-disclaimer">Reply STOP to opt out · Standard msg rates apply</div>
+        </div>
+        <div class="email-engagement" style="margin-top:8px; border:1px solid var(--green-100); border-radius:8px;">
+          <span>✓</span><span>Delivered · link clicked · 8 min on voyage.com</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight" style="margin-top:20px; background:var(--purple-50); border-color:var(--purple-100);">
+      <div class="highlight-label" style="color:var(--purple-700);">Personalization at work</div>
+      <div class="highlight-text">
+        Notice every line ties back to <strong>Sarah's exact words</strong>: "Q4 broke me", "Banff", "altitude", "no crowds".
+        The Nurturing agent did not pick from 5 templates. It generated each message using her unique post as context.
+        That is why open rates jump from 18% (industry average) to 70% or higher.
+      </div>
+    </div>
+
+    ${nextBtn()}
+  `;
+}
+
+// ============================================================
+// STEP 7 — Retargeting
+// ============================================================
+function renderStep7() {
+  setTimeout(() => {
+    addCDPEvent('Day 3 · Instagram DM sent (sponsored placement)', 'instagram', 'Day 3');
+    setTimeout(() => addCDPEvent('Retargeting ads activated on Google + Meta networks', 'ads', 'Day 3'), 400);
+    setTimeout(() => addCDPEvent('Sarah viewed Banff page on voyage.com (3 sessions)', 'website', 'Day 4'), 800);
+    setTimeout(() => addCDPEvent('Engagement signal: 47% above her behavioral baseline', 'cdp', 'Day 4'), 1200);
+  }, 300);
+
+  return `
+    ${banner('Day 3 to 4', 'Stay top-of-mind with retargeting. Track every micro-interaction.', 'var(--orange-600)')}
+
+    <div class="agent-info">
+      <div class="agent-info-label">Journey Orchestrator</div>
+      <div class="agent-info-title">Do not push. Stay present.</div>
+      <div class="agent-info-text">
+        Most leads need 5 to 7 touches before converting. Retargeting ads + soft social DMs keep Voyage in Sarah's
+        mind while she researches. The Orchestrator coordinates frequency caps so we never become noise.
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div style="display:flex; gap:6px; align-items:center; margin-bottom:10px;">
+          ${badge('instagram')}
+          <span style="font-size:11px; color:var(--slate-500); font-family:'JetBrains Mono', monospace;">Day 3 · 7:42 PM CT</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--slate-100);">
+          <div style="width:36px; height:36px; border-radius:50%; background:var(--pink-100); color:var(--pink-700); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px;">VT</div>
+          <div>
+            <div style="font-size:13px; font-weight:600; color:var(--slate-900);">@voyage.travel</div>
+            <div style="font-size:10px; color:var(--slate-500);">Verified · Responds in 1hr</div>
+          </div>
+        </div>
+        <div style="background:var(--slate-100); border-radius:14px; padding:10px 12px; max-width:90%; margin-bottom:8px;">
+          <div style="font-size:12.5px; color:var(--slate-900); line-height:1.5;">
+            Hey Sarah, loved your Cancun throwback and the Banff shoutout. We just dropped a story on
+            "5 Banff trails locals keep quiet about" — thought you would want first look.
+          </div>
+        </div>
+        <div style="background:var(--white); border:1px solid var(--slate-200); border-radius:8px; padding:10px; display:flex; gap:10px; align-items:center;">
+          <div style="width:42px; height:42px; background:var(--slate-200); border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--slate-500); font-weight:600;">IMG</div>
+          <div>
+            <div style="font-size:12px; font-weight:600; color:var(--slate-900);">5 Banff trails locals keep quiet</div>
+            <div style="font-size:11px; color:var(--slate-500);">voyage.com · 4 min read</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex; gap:6px; align-items:center; margin-bottom:10px;">
+          ${badge('ads')}
+          <span style="font-size:11px; color:var(--slate-500); font-family:'JetBrains Mono', monospace;">Day 3-4 · Continuous</span>
+        </div>
+        <div style="background:var(--white); border:1px solid var(--slate-200); border-radius:10px; overflow:hidden;">
+          <div style="background:var(--slate-100); padding:6px 10px; border-bottom:1px solid var(--slate-200); font-size:10px; color:var(--slate-500); font-family:'JetBrains Mono', monospace;">instagram.com</div>
+          <div style="padding:14px;">
+            <div style="background:var(--navy-800); color:white; border-radius:8px; padding:14px;">
+              <div style="font-size:10px; color:rgba(255,255,255,0.7); margin-bottom:6px; font-family:'JetBrains Mono', monospace;">SPONSORED</div>
+              <div style="font-size:14px; font-weight:700; margin-bottom:4px;">Banff without the tour buses</div>
+              <div style="font-size:11px; opacity:0.9; margin-bottom:10px; line-height:1.5;">
+                6-day curated escape · Photographer-led · Boutique mountain lodges
+              </div>
+              <button style="background:white; color:var(--navy-800); border:none; padding:6px 14px; border-radius:6px; font-weight:600; font-size:11px; cursor:pointer;">See itinerary →</button>
+            </div>
+            <div style="margin-top:10px; font-size:11px; color:var(--slate-600); display:flex; gap:14px;">
+              <span><strong>Impressions:</strong> 247</span>
+              <span><strong>Clicks:</strong> 8</span>
+              <span><strong>CTR:</strong> 3.2%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="card-label" style="color:var(--green-700);">CDP behavior signals (Day 4)</div>
+      <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:10px;">
+        <div class="campaign-stat">
+          <div class="campaign-stat-label">Site visits</div>
+          <div class="campaign-stat-value" style="color:var(--green-700);">3</div>
+          <div class="campaign-stat-sublabel">SESSIONS</div>
+        </div>
+        <div class="campaign-stat">
+          <div class="campaign-stat-label">Time on site</div>
+          <div class="campaign-stat-value" style="color:var(--green-700);">14m</div>
+          <div class="campaign-stat-sublabel">ENGAGED</div>
+        </div>
+        <div class="campaign-stat">
+          <div class="campaign-stat-label">Pages viewed</div>
+          <div class="campaign-stat-value" style="color:var(--green-700);">11</div>
+          <div class="campaign-stat-sublabel">UNIQUE</div>
+        </div>
+        <div class="campaign-stat">
+          <div class="campaign-stat-label">vs baseline</div>
+          <div class="campaign-stat-value" style="color:var(--green-700);">+47%</div>
+          <div class="campaign-stat-sublabel">UPLIFT</div>
+        </div>
+      </div>
+    </div>
+
+    ${nextBtn()}
+  `;
+}
+
+// ============================================================
+// STEP 8 — Hot Lead
+// ============================================================
+function renderStep8() {
+  setTimeout(() => {
+    addCDPEvent('Hot lead trigger fired: 4 engagement signals in 48 hours', 'jo', 'Day 5');
+    setTimeout(() => addCDPEvent('Score updated: 78 → 92 (high intent)', 'cdp', 'Day 5'), 400);
+    setTimeout(() => addCDPEvent('LLM agent generating personalized 6-day itinerary', 'ai', 'Day 5'), 800);
+    setTimeout(() => addCDPEvent('Day 5 · curated email sent with full Banff plan', 'email', 'Day 5'), 1200);
+  }, 300);
+
+  return `
+    ${banner('Day 5 · 11:00 AM CT', 'Behavior signals trigger HOT LEAD status. The journey escalates.', 'var(--red-600)')}
+
+    <div class="agent-info">
+      <div class="agent-info-label">Journey Orchestrator · auto-escalation</div>
+      <div class="agent-info-title">When the lead heats up, the journey adapts</div>
+      <div class="agent-info-text">
+        Sarah's engagement crossed a threshold (3+ visits, 14 minutes on site, ad clicks). The Orchestrator
+        automatically escalates her status from "warming" to "hot" — and the Nurturing agent generates a high-value,
+        personalized itinerary preview.
+      </div>
+    </div>
+
+    <div class="hot-card">
+      <div class="hot-card-content">
+        <div class="hot-label">Hot lead status</div>
+        <div class="hot-title">Sarah is now in buying mode</div>
+        <div class="hot-text">Engagement signals indicate 92% probability of conversion in next 7 days.</div>
+      </div>
+      <div class="score-display">
+        <div class="score-block">
+          <div class="score-block-label">BEFORE</div>
+          <div class="score-block-value score-amber">78</div>
+        </div>
+        <div class="score-arrow">→</div>
+        <div class="score-block">
+          <div class="score-block-label">AFTER</div>
+          <div class="score-block-value score-red">92</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:8px; align-items:center; margin-bottom:10px;">
+      ${badge('email')}
+      <span style="font-size:11px; color:var(--slate-500); font-family:'JetBrains Mono', monospace;">Day 5 · 11:30 AM CT</span>
+      <span class="badge" style="background:var(--red-50); color:var(--red-700); border:1px solid var(--red-100);">High priority</span>
+    </div>
+
+    <div class="email-mockup">
+      <div class="email-header">
+        <div class="email-meta-row">From: <strong>Maya at Voyage</strong></div>
+        <div class="email-meta-row">Subject: <strong>Your 6-day Banff escape (just for you, no pressure)</strong></div>
+      </div>
+      <div class="email-body">
+        Hey Sarah,<br><br>
+        Saw you have been browsing our Banff pages a few times — sketched out what 6 days could look like, based on
+        what you said matters: altitude, no crowds, real silence, photography.
+
+        <div class="itinerary">
+          <div class="itinerary-title">YOUR ITINERARY · Banff + Lake Louise + Yoho</div>
+          <div class="itinerary-row">
+            <strong>Day 1:</strong> Fly Austin → Calgary · drive to Banff (Buffalo Mountain Lodge)<br>
+            <strong>Day 2:</strong> Sunrise at Vermilion Lakes · afternoon at Cave and Basin<br>
+            <strong>Day 3:</strong> Lake Louise + Moraine Lake (off-hours guide access)<br>
+            <strong>Day 4:</strong> Yoho National Park · Emerald Lake + Takakkaw Falls<br>
+            <strong>Day 5:</strong> Plain of Six Glaciers hike · evening at Banff Upper Hot Springs<br>
+            <strong>Day 6:</strong> Sunrise at Two Jack Lake → Calgary departure
+          </div>
+        </div>
+
+        <div class="pricing-grid">
+          <div class="pricing-cell">
+            <div class="pricing-label">Price</div>
+            <div class="pricing-value">USD 3,850</div>
+            <div class="pricing-sub">All-inclusive</div>
+          </div>
+          <div class="pricing-cell">
+            <div class="pricing-label">Group size</div>
+            <div class="pricing-value">Solo</div>
+            <div class="pricing-sub" style="color:var(--slate-500);">+ Local guide</div>
+          </div>
+        </div>
+
+        Want to chat through dates? I am here — just reply, no chase.<br><br>
+        — Maya
+      </div>
+      <div style="padding:14px 18px; border-top:1px solid var(--slate-200); display:flex; gap:8px;">
+        <button class="btn" style="font-size:12px; padding:8px 16px;">Yes, tell me more →</button>
+        <button class="btn-outline btn" style="font-size:12px; padding:8px 16px;">Maybe later</button>
+      </div>
+    </div>
+
+    ${nextBtn()}
+  `;
+}
+
+// ============================================================
+// STEP 9 — Handoff
+// ============================================================
+function renderStep9() {
+  setTimeout(() => {
+    addCDPEvent('Sarah replied: "Yes, I want to know more"', 'email', 'Day 6');
+    setTimeout(() => addCDPEvent('Handoff to Acquisition agent triggered', 'jo', 'Day 6'), 400);
+    setTimeout(() => addCDPEvent('Acquisition agent activated · live chat session started', 'ai', 'Day 6'), 800);
+  }, 300);
+
+  return `
+    ${banner('Day 6 · 10:15 PM CT', 'Sarah engages. Handoff from Nurturing to Acquisition agent.', 'var(--purple-600)')}
+
+    <div class="agent-info">
+      <div class="agent-info-label">Journey Orchestrator → Acquisition agent</div>
+      <div class="agent-info-title">From nurture to closing — seamless handoff</div>
+      <div class="agent-info-text">
+        The moment Sarah replies, the Orchestrator stops nurturing and hands her over to the Acquisition agent —
+        a more capable LLM with access to live tools (flights, hotels, weather, booking systems).
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="color:var(--purple-700); text-align:center;">System handoff</div>
+      <div class="handoff-grid">
+        <div class="handoff-cell handoff-cell-from">
+          <div class="handoff-icon">🌱</div>
+          <div class="handoff-name handoff-name-from">Nurturing agent</div>
+          <div class="handoff-status">5 touchpoints · 6 days</div>
+          <div class="handoff-status" style="color:var(--green-700); font-weight:600; margin-top:4px;">Complete</div>
+        </div>
+        <div class="handoff-arrow">→</div>
+        <div class="handoff-cell handoff-cell-to">
+          <div class="handoff-icon">💬</div>
+          <div class="handoff-name handoff-name-to">Acquisition agent</div>
+          <div class="handoff-status">Live conversation · Tool use</div>
+          <div class="handoff-status" style="color:var(--purple-700); font-weight:600; margin-top:4px;">Active</div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px; padding:14px; background:var(--slate-50); border-radius:8px;">
+        <div class="card-label" style="margin-bottom:8px;">Context transferred</div>
+        <div>
+          <span class="chip">Full lead profile (VC_8472)</span>
+          <span class="chip">All 5 nurture touchpoints</span>
+          <span class="chip">Engagement history</span>
+          <span class="chip">Personalization hooks (7)</span>
+          <span class="chip">Itinerary preference (6-day Banff)</span>
+          <span class="chip">Budget tier (USD 3-5K)</span>
+          <span class="chip">Preferred channels (email, SMS)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Acquisition agent · live tools</div>
+      <div class="tools-grid">
+        <div class="tool-cell">
+          <div class="tool-cell-icon">✈</div>
+          <div>
+            <div class="tool-cell-title">Flight search</div>
+            <div class="tool-cell-desc">Real-time flights, prices, timing</div>
+          </div>
+        </div>
+        <div class="tool-cell">
+          <div class="tool-cell-icon">🏨</div>
+          <div>
+            <div class="tool-cell-title">Hotel search</div>
+            <div class="tool-cell-desc">Boutique hotels, lodges, ratings</div>
+          </div>
+        </div>
+        <div class="tool-cell">
+          <div class="tool-cell-icon">☀</div>
+          <div>
+            <div class="tool-cell-title">Weather check</div>
+            <div class="tool-cell-desc">7-day forecast for trip dates</div>
+          </div>
+        </div>
+        <div class="tool-cell">
+          <div class="tool-cell-icon">📅</div>
+          <div>
+            <div class="tool-cell-title">Booking system</div>
+            <div class="tool-cell-desc">Hold inventory, process payment</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    ${nextBtn()}
+  `;
+}
+
+// ============================================================
+// STEP 10 — Booking Conversation
+// ============================================================
+function renderStep10() {
+  setTimeout(() => {
+    addCDPEvent('Tool call: get_weather(Banff, Oct 14-19)', 'ai', 'Day 6');
+    setTimeout(() => addCDPEvent('Tool call: search_flights(AUS → YYC)', 'ai', 'Day 6'), 400);
+    setTimeout(() => addCDPEvent('Tool call: book_package(Banff, USD 3,850)', 'ai', 'Day 6'), 800);
+    setTimeout(() => addCDPEvent('Conversion! Booking confirmed · USD 3,850', 'website', 'Day 6'), 1200);
+    setTimeout(() => addCDPEvent('Sarah is now a customer', 'cdp', 'Day 6'), 1600);
+  }, 300);
+
+  return `
+    ${banner('Day 6 · 10:30 PM CT', 'Live conversation with the Acquisition agent. From chat to booking in 18 minutes.', 'var(--green-600)')}
+
+    <div class="agent-info">
+      <div class="agent-info-label">Acquisition agent · live booking</div>
+      <div class="agent-info-title">From conversation to confirmation</div>
+      <div class="agent-info-text">
+        The Acquisition agent has access to live travel data. It searches flights, checks hotels, validates weather —
+        all during the conversation. Sarah does not fill forms. She just talks.
+      </div>
+    </div>
+
+    <div class="chat-thread">
+      <div class="chat-msg">
+        <div class="chat-avatar chat-avatar-user">SM</div>
+        <div class="chat-bubble chat-bubble-user">
+          Hey, that itinerary looked amazing. I want to do this October 14-19. But I am worried about the weather —
+          will the larches still be golden? And how cold are we talking?
+        </div>
+      </div>
+
+      <div class="chat-msg">
+        <div class="chat-avatar chat-avatar-ai">V</div>
+        <div class="chat-bubble chat-bubble-ai">
+          Great choice on dates, Sarah. Let me check Banff weather and larch conditions for Oct 14-19.
+          <div class="tool-call">tool_call: get_weather(loc="Banff, AB", dates="Oct 14-19")</div>
+          <strong>Daytime:</strong> 45-55°F (perfect for hiking)<br>
+          <strong>Nighttime:</strong> 25-32°F (cold but lodges are warm)<br>
+          <strong>Larch status:</strong> Peak golden — exactly the right window<br>
+          <strong>Snow risk:</strong> Light dusting possible at higher elevations<br><br>
+          You will need warm layers. This is honestly the best week to be there — fewer tourists, golden larches,
+          clear photography skies.
+        </div>
+      </div>
+
+      <div class="chat-msg">
+        <div class="chat-avatar chat-avatar-user">SM</div>
+        <div class="chat-bubble chat-bubble-user">
+          Perfect. What flights are available from Austin? And what is actually included in the package?
+        </div>
+      </div>
+
+      <div class="chat-msg">
+        <div class="chat-avatar chat-avatar-ai">V</div>
+        <div class="chat-bubble chat-bubble-ai">
+          <div class="tool-call">tool_call: search_flights(AUS → YYC, Oct 14)</div>
+          <strong>Best options:</strong><br>
+          • United UA-1284: 6:30 AM · USD 487 (recommended · 1 stop DEN)<br>
+          • Air Canada AC-1742: 11:00 AM · USD 542 (1 stop YYZ)<br><br>
+          <strong>Your USD 3,850 includes:</strong><br>
+          ✓ Round-trip flights (Austin ↔ Calgary)<br>
+          ✓ 4WD SUV rental for 6 days<br>
+          ✓ Local Banff naturalist guide<br>
+          ✓ Buffalo Mountain Lodge (5 nights)<br>
+          ✓ All meals (lodge breakfast + curated dinners)<br>
+          ✓ National Park passes (Banff + Yoho)<br>
+          ✓ 24/7 concierge support
+        </div>
+      </div>
+
+      <div class="chat-msg">
+        <div class="chat-avatar chat-avatar-user">SM</div>
+        <div class="chat-bubble chat-bubble-user">
+          I am in. Let us book it. October 14-19, United UA-1284 morning flight. Charge my Amex on file.
+        </div>
+      </div>
+
+      <div class="chat-msg">
+        <div class="chat-avatar chat-avatar-ai">V</div>
+        <div class="chat-bubble chat-bubble-success">
+          <strong>Booking confirmed.</strong>
+          <div class="tool-call">tool_call: book_package(VC-BNF-9472, amount=3850)</div>
+          <strong>Booking ID:</strong> VC-BNF-9472<br>
+          <strong>Dates:</strong> October 14-19, 2025<br>
+          <strong>Total:</strong> USD 3,850 (Amex ending 7821)<br>
+          <strong>Flight:</strong> UA-1284 · 6:30 AM Oct 14<br><br>
+          Confirmation email + SMS receipt sent. Maya (your concierge) will text you 3 days before with packing tips
+          and trail conditions. Have an incredible trip, Sarah.
+        </div>
+      </div>
+    </div>
+
+    ${nextBtn('See journey recap →')}
+  `;
+}
+
+// ============================================================
+// STEP 11 — Recap
+// ============================================================
+function renderStep11() {
+  setTimeout(() => {
+    addCDPEvent('All marketing channels suppressed · onboarding mode', 'jo', 'Day 6');
+    setTimeout(() => addCDPEvent('Customer journey complete: lead → customer in 6 days', 'cdp', 'Day 6'), 600);
+  }, 300);
+
+  const journey = [
+    { day: 'Day 0', text: 'Anonymous Instagram post about Banff and Jackson Hole', d: 'instagram' },
+    { day: 'Day 0', text: 'Lead Discovery agent captured signal in 47ms', d: 'cdp' },
+    { day: 'Day 0', text: 'LLM agent scored intent 78/100, extracted 7 hooks', d: 'ai' },
+    { day: 'Day 0', text: 'Identity stitched: Instagram + email + phone + history', d: 'cdp' },
+    { day: 'Day 1', text: 'Empathetic email · "We saw your Banff post"', d: 'email' },
+    { day: 'Day 2', text: 'SMS with Lake Louise larch photo link', d: 'sms' },
+    { day: 'Day 3', text: 'Instagram DM · 5 Banff trails locals keep quiet', d: 'instagram' },
+    { day: 'Day 3-4', text: 'Retargeting ads · 247 impressions, 8 clicks, 3.2% CTR', d: 'ads' },
+    { day: 'Day 5', text: 'HOT LEAD trigger · score upgraded 78 → 92', d: 'jo' },
+    { day: 'Day 5', text: 'AI-generated 6-day Banff itinerary email sent', d: 'email' },
+    { day: 'Day 6', text: 'Sarah engaged · handoff to Acquisition agent', d: 'ai' },
+    { day: 'Day 6', text: 'Live chat · weather, flights, hotels queried', d: 'ai' },
+    { day: 'Day 6', text: 'BOOKING CONFIRMED · USD 3,850 · Banff Oct 14-19', d: 'website' }
+  ];
+
+  return `
+    ${banner('Summary', 'Anonymous social signal → confirmed booking in 6 days · 6 systems orchestrated.', 'var(--green-600)')}
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Lead score</div>
+        <div class="stat-value stat-value-green">92</div>
+        <div class="stat-sublabel">of 100</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Channels</div>
+        <div class="stat-value">5</div>
+        <div class="stat-sublabel">orchestrated</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Days to close</div>
+        <div class="stat-value stat-value-orange">6</div>
+        <div class="stat-sublabel">first contact</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Booking value</div>
+        <div class="stat-value">$3.85K</div>
+        <div class="stat-sublabel">all-inclusive</div>
+      </div>
+    </div>
+
+    <div class="customer-card">
+      <div class="customer-avatar">SM</div>
+      <div style="flex:1; min-width:0;">
+        <div class="customer-name">${PERSONA.name}</div>
+        <div class="customer-meta">${PERSONA.city} · ${PERSONA.age} · Marketing Director</div>
+        <div class="customer-tags">
+          <span class="customer-tag tag-green">Customer</span>
+          <span class="customer-tag tag-purple">High value · USD 8.5K LTV</span>
+          <span class="customer-tag tag-blue">Banff · Oct 14-19</span>
+        </div>
+      </div>
+      <div class="customer-amount">
+        <div class="customer-amount-label">Booking confirmed</div>
+        <div class="customer-amount-value">USD 3,850</div>
+        <div class="customer-amount-meta">Amex · Oct 13</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Orchestrated customer journey</div>
+      <ul class="timeline">
+        ${journey.map(j => `
+          <li class="timeline-item">
+            <div class="timeline-day">${j.day}</div>
+            <div class="timeline-dot" style="background:${getDomainColor(j.d)};"></div>
+            <div class="timeline-text">${j.text}</div>
+            ${badge(j.d)}
+          </li>
+        `).join('')}
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Systems that worked together</div>
+      <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px;">
+        <div class="system-card">
+          <div class="system-card-title">Lead Discovery agent</div>
+          <div class="system-card-desc">Scanned 5 social platforms, identified Sarah from her public Instagram post in 47ms</div>
+        </div>
+        <div class="system-card">
+          <div class="system-card-title">LLM agent (large language model)</div>
+          <div class="system-card-desc">Scored intent (78→92), extracted 7 hooks, generated all message content</div>
+        </div>
+        <div class="system-card">
+          <div class="system-card-title">Customer Data Platform</div>
+          <div class="system-card-desc">Stitched identity across social, email, phone, and behavioral history</div>
+        </div>
+        <div class="system-card">
+          <div class="system-card-title">Journey Orchestrator</div>
+          <div class="system-card-desc">Triggered escalation when engagement crossed thresholds, suppressed channels post-conversion</div>
+        </div>
+        <div class="system-card">
+          <div class="system-card-title">Nurturing agent</div>
+          <div class="system-card-desc">5-touchpoint campaign across email, SMS, Instagram, and retargeting</div>
+        </div>
+        <div class="system-card">
+          <div class="system-card-title">Acquisition agent</div>
+          <div class="system-card-desc">Live chat with tool use: flights, hotels, weather, booking — closed in 18 minutes</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-eyebrow">The result</div>
+      <div class="summary-title">Anonymous lead → confirmed booking in 6 days</div>
+      <div class="summary-subtitle">
+        Discovered → profiled → nurtured → escalated → acquired<br>
+        Without a single form fill. Without a generic message. Without manual marketer effort.
+      </div>
+      <div class="summary-divider">
+        <strong>Industry benchmark:</strong> 30-90 days, 8-12% conversion rate<br>
+        <strong>Voyage Concierge:</strong> 6 days, 92% conversion probability achieved
+      </div>
+    </div>
+
+    <button class="btn btn-outline" onclick="resetDemo()" style="margin-top:14px; width:100%;">↺ Restart walkthrough</button>
+  `;
+}
+
+// ============================================================
+// ROUTING
+// ============================================================
+const STEP_RENDERERS = [
+  renderStep1, renderStep2, renderStep3, renderStep4,
+  renderStep5, renderStep6, renderStep7, renderStep8,
+  renderStep9, renderStep10, renderStep11
+];
+
+function goToStep(step) {
+  if (step < 0 || step >= STEPS.length) return;
+  currentStep = step;
+  document.getElementById('step-content').innerHTML = STEP_RENDERERS[step]();
+  renderStepNav();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetDemo() {
+  cdpEvents = [];
+  renderCDPPanel();
+  goToStep(0);
+}
+
+goToStep(0);
+</script>
+
+</body>
+</html>
