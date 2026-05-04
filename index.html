@@ -659,12 +659,8 @@
   .ig-image {
     background: var(--slate-100);
     height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--slate-400);
-    font-size: 14px;
-    font-weight: 500;
+    overflow: hidden;
+    position: relative;
   }
 
   .ig-caption {
@@ -1523,21 +1519,24 @@ const PERSONA = {
   phone: "+1 512-555-0184",
   travel_history: "Cancun (Jan 2023), Park City (Mar 2022), Tokyo (Sep 2024)",
   segment: "Premium Solo Traveler",
-  ltv_estimate: "USD 8,500 over 5 years"
+  ltv_estimate: "USD 8,500 over 5 years",
+  relationship: "Newsletter subscriber since 2023 · Booked Cancun trip Jan 2023",
+  consent_status: "Email opt-in (2023) · SMS opt-in (at booking) · Cookies accepted"
 };
 
 const STEPS = [
   { n: 1, label: "Persona" },
-  { n: 2, label: "Signal" },
-  { n: 3, label: "AI analysis" },
-  { n: 4, label: "Profile build" },
-  { n: 5, label: "Strategy" },
-  { n: 6, label: "Email + SMS" },
-  { n: 7, label: "Retargeting" },
-  { n: 8, label: "Hot lead" },
-  { n: 9, label: "Handoff" },
-  { n: 10, label: "Booking" },
-  { n: 11, label: "Recap" }
+  { n: 2, label: "Foundation" },
+  { n: 3, label: "Signal" },
+  { n: 4, label: "AI analysis" },
+  { n: 5, label: "Profile build" },
+  { n: 6, label: "Strategy" },
+  { n: 7, label: "Email + SMS" },
+  { n: 8, label: "Retargeting" },
+  { n: 9, label: "Hot lead" },
+  { n: 10, label: "Handoff" },
+  { n: 11, label: "Booking" },
+  { n: 12, label: "Recap" }
 ];
 
 function addCDPEvent(text, domain, time) {
@@ -1621,7 +1620,7 @@ function badge(domain) {
 // ============================================================
 function renderStep1() {
   return `
-    ${banner('Pre-discovery', 'Meet our lead. Before any of this happens, she is just a stranger to us.')}
+    ${banner('Pre-discovery', 'Meet our lead. We have her email, but she has gone dormant. We need to re-engage her.')}
 
     <div class="persona-card">
       <div class="persona-header">
@@ -1634,16 +1633,20 @@ function renderStep1() {
       </div>
       <div class="persona-grid">
         <div class="persona-grid-row">
+          <span class="persona-grid-key">Relationship</span>
+          <span class="persona-grid-val" style="font-size:11.5px;">${PERSONA.relationship}</span>
+        </div>
+        <div class="persona-grid-row">
+          <span class="persona-grid-key">Consent on file</span>
+          <span class="persona-grid-val" style="font-size:11.5px;">${PERSONA.consent_status}</span>
+        </div>
+        <div class="persona-grid-row">
           <span class="persona-grid-key">Annual income</span>
           <span class="persona-grid-val">${PERSONA.income}</span>
         </div>
         <div class="persona-grid-row">
           <span class="persona-grid-key">Travel history</span>
-          <span class="persona-grid-val">${PERSONA.travel_history}</span>
-        </div>
-        <div class="persona-grid-row">
-          <span class="persona-grid-key">Lead tier</span>
-          <span class="persona-grid-val">High value</span>
+          <span class="persona-grid-val" style="font-size:11.5px;">${PERSONA.travel_history}</span>
         </div>
         <div class="persona-grid-row">
           <span class="persona-grid-key">Projected lifetime value</span>
@@ -1655,41 +1658,255 @@ function renderStep1() {
     <div class="card">
       <div class="card-label">The business challenge</div>
       <div style="font-size:13.5px; color:var(--slate-700); line-height:1.7;">
-        Sarah is the kind of customer travel companies dream of. High disposable income, frequent traveler, premium tastes.
-        But <strong style="color:var(--slate-900);">she has never visited our website</strong>. She does not know we exist.
-        She is about to start dreaming about her next vacation, and she will do that on social media, not on travel sites.
+        Sarah booked one trip with us in 2023. Since then she has stayed on our newsletter list but has not opened
+        an email in 6 months. She is what marketers call <strong style="color:var(--slate-900);">"dormant"</strong> —
+        a high-value past customer drifting away.
         <br><br>
-        <span style="color:var(--navy-800); font-weight:600;">The question:</span> how do we discover her, earn her trust,
-        and convert her into a customer without her ever filling out a "Request a quote" form?
+        We have <strong style="color:var(--slate-900);">lawful basis</strong> to contact her (she opted in at her 2023 booking,
+        consent renewed at last newsletter interaction). What we lack is a <strong style="color:var(--slate-900);">reason to reach out</strong>
+        that feels personal, not generic.
+        <br><br>
+        <span style="color:var(--navy-800); font-weight:600;">The question:</span> how do we know when she is dreaming
+        about her next trip — so we can show up at exactly the right moment with exactly the right offer?
       </div>
     </div>
 
-    ${nextBtn('Show me how →')}
+    ${nextBtn('See the data foundation →')}
   `;
 }
 
 // ============================================================
-// STEP 2 — Discovery signal
+// STEP 2 — Foundation (NEW: Compliance + Data Strategy)
 // ============================================================
 function renderStep2() {
+  return `
+    ${banner('Foundation', 'Before we build the journey, we lay down the compliance and data architecture.', 'var(--green-600)')}
+
+    <div class="agent-info">
+      <div class="agent-info-label">Compliance-first data strategy</div>
+      <div class="agent-info-title">We do not scrape. We orchestrate licensed and consented data.</div>
+      <div class="agent-info-text">
+        Every signal we use comes from one of three legal lanes. Every action requires lawful basis under
+        <strong>GDPR, CCPA, and DPDP</strong>. Every record has provenance and confidence.
+      </div>
+    </div>
+
+    <div class="section-h">The three legal data lanes</div>
+
+    <div class="card" style="border-left:4px solid var(--green-600); border-radius:0 12px 12px 0;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+        <div style="background:var(--green-100); color:var(--green-700); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px;">1</div>
+        <div style="font-size:15px; font-weight:700; color:var(--slate-900);">First-party data (our own)</div>
+      </div>
+      <div style="font-size:13px; color:var(--slate-700); line-height:1.65; margin-bottom:10px;">
+        Data customers gave us directly, with explicit consent. <strong>This is our biggest and safest source.</strong>
+      </div>
+      <div>
+        <span class="chip chip-green">Newsletter subscribers (45K opted in)</span>
+        <span class="chip chip-green">Past booking history</span>
+        <span class="chip chip-green">Website cookies (with consent banner)</span>
+        <span class="chip chip-green">App behavior (logged-in users)</span>
+        <span class="chip chip-green">Customer service tickets</span>
+        <span class="chip chip-green">Loyalty program data</span>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:4px solid var(--blue-500); border-radius:0 12px 12px 0;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+        <div style="background:var(--blue-100); color:var(--navy-800); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px;">2</div>
+        <div style="font-size:15px; font-weight:700; color:var(--slate-900);">Licensed second-party data</div>
+      </div>
+      <div style="font-size:13px; color:var(--slate-700); line-height:1.65; margin-bottom:10px;">
+        Tools we pay for that have <strong>already secured platform agreements and user consent</strong>.
+        We do not scrape — they license the data and resell access.
+      </div>
+      <div>
+        <span class="chip chip-blue">Brandwatch (social listening · USD 80K/yr)</span>
+        <span class="chip chip-blue">Sprinklr (social CRM)</span>
+        <span class="chip chip-blue">LiveRamp (identity graph)</span>
+        <span class="chip chip-blue">Acxiom (demographics)</span>
+        <span class="chip chip-blue">Reddit official API</span>
+        <span class="chip chip-blue">Meta Graph API (public posts)</span>
+      </div>
+    </div>
+
+    <div class="card" style="border-left:4px solid var(--amber-600); border-radius:0 12px 12px 0;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+        <div style="background:var(--amber-100); color:var(--amber-700); width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px;">3</div>
+        <div style="font-size:15px; font-weight:700; color:var(--slate-900);">Public + aggregated signals</div>
+      </div>
+      <div style="font-size:13px; color:var(--slate-700); line-height:1.65; margin-bottom:10px;">
+        Data with no individual identification. Used for <strong>regional trends and demand sensing</strong>, not personal targeting.
+      </div>
+      <div>
+        <span class="chip chip-amber">Google Trends (DMA-level)</span>
+        <span class="chip chip-amber">Public hashtag analytics</span>
+        <span class="chip chip-amber">TripAdvisor public reviews</span>
+        <span class="chip chip-amber">Industry reports</span>
+      </div>
+    </div>
+
+    <div class="section-h">What we do NOT do</div>
+
+    <div class="card" style="background:var(--red-50); border-color:var(--red-100);">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div style="display:flex; align-items:flex-start; gap:8px;">
+          <span style="color:var(--red-700); font-weight:700; flex-shrink:0;">✕</span>
+          <div style="font-size:12.5px; color:var(--slate-700);">Scrape personal Instagram profiles</div>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:8px;">
+          <span style="color:var(--red-700); font-weight:700; flex-shrink:0;">✕</span>
+          <div style="font-size:12.5px; color:var(--slate-700);">Read private messages or DMs</div>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:8px;">
+          <span style="color:var(--red-700); font-weight:700; flex-shrink:0;">✕</span>
+          <div style="font-size:12.5px; color:var(--slate-700);">Cold-email people without consent</div>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:8px;">
+          <span style="color:var(--red-700); font-weight:700; flex-shrink:0;">✕</span>
+          <div style="font-size:12.5px; color:var(--slate-700);">Use sensitive data (health, religion, politics)</div>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:8px;">
+          <span style="color:var(--red-700); font-weight:700; flex-shrink:0;">✕</span>
+          <div style="font-size:12.5px; color:var(--slate-700);">Sell or share data with third parties</div>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:8px;">
+          <span style="color:var(--red-700); font-weight:700; flex-shrink:0;">✕</span>
+          <div style="font-size:12.5px; color:var(--slate-700);">Track minors or anyone who opted out</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-h">Compliance frameworks we adhere to</div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:10px; margin-bottom:20px;">
+      <div class="system-card">
+        <div class="system-card-title" style="color:var(--navy-800);">GDPR</div>
+        <div class="system-card-desc">EU privacy law. Lawful basis required, right to erasure, DPO appointed.</div>
+      </div>
+      <div class="system-card">
+        <div class="system-card-title" style="color:var(--navy-800);">CCPA / CPRA</div>
+        <div class="system-card-desc">California. Notice at collection, opt-out, GPC signal honored.</div>
+      </div>
+      <div class="system-card">
+        <div class="system-card-title" style="color:var(--navy-800);">DPDP Act</div>
+        <div class="system-card-desc">India. Consent in plain language, data principal rights respected.</div>
+      </div>
+      <div class="system-card">
+        <div class="system-card-title" style="color:var(--navy-800);">CAN-SPAM + TCPA</div>
+        <div class="system-card-desc">US. Email + SMS rules. Separate opt-ins per channel.</div>
+      </div>
+    </div>
+
+    <div class="section-h">Targeted listening, not blind world listening</div>
+
+    <div class="card">
+      <div style="font-size:13px; color:var(--slate-700); line-height:1.7; margin-bottom:14px;">
+        Each client configures their own narrow query rule of hashtags, keywords, and exclusions.
+        We do not "listen to all of social media" — that would be impossibly noisy and expensive.
+        Brandwatch returns only posts that match the rule. Different clients get different rules.
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:10px; margin-top:8px;">
+        <div style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:10px; padding:14px;">
+          <div style="font-size:11px; color:var(--navy-800); font-weight:700; font-family:'JetBrains Mono', monospace; letter-spacing:0.5px; margin-bottom:6px;">AIRLINE PARTNER</div>
+          <div style="font-size:12px; color:var(--slate-700); line-height:1.6; margin-bottom:8px;">Tracks route searches, frequent flyer activity, competitor switching.</div>
+          <div style="font-size:11px; color:var(--slate-600);">
+            Hashtags: <code style="background:white; padding:1px 6px; border-radius:3px; font-size:10.5px;">#flightdeals #frequentflyer #avgeek</code>
+          </div>
+          <div style="font-size:11px; color:var(--slate-600); margin-top:4px;">
+            Keywords: <em>"looking for flights", "best airline for", "switching airlines"</em>
+          </div>
+        </div>
+
+        <div style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:10px; padding:14px;">
+          <div style="font-size:11px; color:var(--navy-800); font-weight:700; font-family:'JetBrains Mono', monospace; letter-spacing:0.5px; margin-bottom:6px;">TRAVEL BOOKING PARTNER</div>
+          <div style="font-size:12px; color:var(--slate-700); line-height:1.6; margin-bottom:8px;">Tracks vacation planning, destination interest, accommodation type.</div>
+          <div style="font-size:11px; color:var(--slate-600);">
+            Hashtags: <code style="background:white; padding:1px 6px; border-radius:3px; font-size:10.5px;">#travelplanning #wanderlust #bucketlist</code>
+          </div>
+          <div style="font-size:11px; color:var(--slate-600); margin-top:4px;">
+            Keywords: <em>"planning a trip", "anyone been to", "boutique hotel"</em>
+          </div>
+        </div>
+
+        <div style="background:var(--slate-50); border:1px solid var(--slate-200); border-radius:10px; padding:14px;">
+          <div style="font-size:11px; color:var(--navy-800); font-weight:700; font-family:'JetBrains Mono', monospace; letter-spacing:0.5px; margin-bottom:6px;">HOTEL / RESORT</div>
+          <div style="font-size:12px; color:var(--slate-700); line-height:1.6; margin-bottom:8px;">Tracks direct brand mentions, location-based searches, event signals.</div>
+          <div style="font-size:11px; color:var(--slate-600);">
+            Hashtags: <code style="background:white; padding:1px 6px; border-radius:3px; font-size:10.5px;">#luxuryhotel #boutiquehotel #weddingvenue</code>
+          </div>
+          <div style="font-size:11px; color:var(--slate-600); margin-top:4px;">
+            Keywords: <em>"best hotel in", "anniversary trip", "spa retreat"</em>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px; padding:10px 14px; background:var(--blue-50); border:1px solid var(--blue-100); border-radius:8px; font-size:12px; color:var(--slate-700);">
+        <strong style="color:var(--navy-800);">Each rule also has exclusions</strong> — terms like "flight simulator", "fly fishing", "hotel job"
+        are filtered out so we do not chase noise. Geographic and language filters narrow further.
+      </div>
+    </div>
+
+    <div class="section-h">Two paths after a signal is captured</div>
+
+    <div class="two-col" style="margin-bottom:16px;">
+      <div class="card" style="border-left:4px solid var(--green-600); border-radius:0 12px 12px 0;">
+        <div style="font-size:11px; color:var(--green-700); font-weight:700; font-family:'JetBrains Mono', monospace; letter-spacing:0.8px; margin-bottom:6px;">PATH A · KNOWN CUSTOMER</div>
+        <div style="font-size:14px; font-weight:700; color:var(--slate-900); margin-bottom:8px;">Handle on file</div>
+        <div style="font-size:12.5px; color:var(--slate-700); line-height:1.65;">
+          The handle matches an existing customer who gave us their social handles at booking.
+          Identity stitches deterministically. <strong>All channels available</strong>: email, SMS,
+          web retargeting, organic social, Meta Custom Audience.
+        </div>
+      </div>
+      <div class="card" style="border-left:4px solid var(--amber-600); border-radius:0 12px 12px 0;">
+        <div style="font-size:11px; color:var(--amber-700); font-weight:700; font-family:'JetBrains Mono', monospace; letter-spacing:0.8px; margin-bottom:6px;">PATH B · NET-NEW LEAD</div>
+        <div style="font-size:14px; font-weight:700; color:var(--slate-900); margin-bottom:8px;">No prior relationship</div>
+        <div style="font-size:12.5px; color:var(--slate-700); line-height:1.65;">
+          We see only their public handle and post. <strong>No PII, no email, no phone.</strong>
+          Limited to: organic social reply (public comment), Meta Custom Audience (hashed handle
+          uploaded server-side, we never see PII), or web retargeting if they click through.
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <div class="highlight-label">For Sarah specifically</div>
+      <div class="highlight-text">
+        She <strong>opted in to email marketing</strong> when she booked Cancun in 2023. She <strong>opted in to SMS</strong>
+        at that booking too. Her cookies have proper consent recorded. <strong>And critically</strong> — she gave us her
+        Instagram handle (<code>@sarah.wanders</code>) at that booking when we asked "share your social so we can tag you in
+        photos." That is what makes her Path A. Without that field, she would be Path B.
+      </div>
+    </div>
+
+    ${nextBtn('Now let us see the signal →')}
+  `;
+}
+
+// ============================================================
+// STEP 3 — Discovery signal
+// ============================================================
+function renderStep3() {
   setTimeout(() => {
     if (cdpEvents.length === 0) {
-      addCDPEvent('Public Instagram post detected via social listening API', 'instagram', 'T+0s');
-      setTimeout(() => addCDPEvent('Hashtags matched: #wanderlust #travelplanning', 'instagram', 'T+1s'), 400);
-      setTimeout(() => addCDPEvent('Geo-tag captured: Austin, TX', 'instagram', 'T+1s'), 800);
+      addCDPEvent('Brandwatch listening: public Instagram post matched travel keywords', 'instagram', 'T+0s');
+      setTimeout(() => addCDPEvent('Hashtags matched: #wanderlust #travelplanning #burnout', 'instagram', 'T+1s'), 400);
+      setTimeout(() => addCDPEvent('Geo-tag captured (public): Austin, TX', 'instagram', 'T+1s'), 800);
     }
   }, 300);
 
   return `
-    ${banner('Day 0 · 9:47 AM CT', 'Sarah posts on Instagram. The Lead Discovery agent picks it up in seconds.', 'var(--pink-600)')}
+    ${banner('Day 0 · 9:47 AM CT', 'Sarah posts on Instagram. Our licensed listening tool picks up the public post.', 'var(--pink-600)')}
 
     <div class="agent-info">
       <div class="agent-info-label">Lead Discovery agent</div>
-      <div class="agent-info-title">Always-on social listening</div>
+      <div class="agent-info-title">Listening through licensed tools, not scraping</div>
       <div class="agent-info-text">
-        We monitor public posts across <strong>Instagram, Reddit, X (Twitter), TikTok, and Facebook public groups</strong>
-        through their official partner APIs and licensed social listening platforms (Brandwatch, Sprinklr, Talkwalker).
-        Travel-intent keywords, hashtags, and geo-tags trigger capture.
+        We use <strong>Brandwatch</strong> (USD 80K/year license) which has proper API agreements with platforms.
+        It surfaces <strong>public posts only</strong> matching travel-intent keywords and hashtags.
+        We see what any user could see by visiting Sarah's public profile — nothing more.
       </div>
     </div>
 
@@ -1702,7 +1919,42 @@ function renderStep2() {
         </div>
         <div style="font-size:11px; color:var(--slate-500); font-weight:500;">9:47 AM</div>
       </div>
-      <div class="ig-image">[ Mountain photo ]</div>
+      <div class="ig-image">
+        <svg viewBox="0 0 360 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="width:100%; height:100%; display:block;">
+          <defs>
+            <linearGradient id="sky-pink" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#fbcfe8"/>
+              <stop offset="50%" stop-color="#fcd5ce"/>
+              <stop offset="100%" stop-color="#fed7aa"/>
+            </linearGradient>
+            <linearGradient id="mtn-far" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#94a3b8"/>
+              <stop offset="100%" stop-color="#64748b"/>
+            </linearGradient>
+            <linearGradient id="mtn-mid" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#475569"/>
+              <stop offset="100%" stop-color="#334155"/>
+            </linearGradient>
+            <linearGradient id="mtn-near" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#1e293b"/>
+              <stop offset="100%" stop-color="#0f172a"/>
+            </linearGradient>
+          </defs>
+          <rect width="360" height="200" fill="url(#sky-pink)"/>
+          <circle cx="270" cy="60" r="22" fill="#fef3c7" opacity="0.9"/>
+          <circle cx="270" cy="60" r="30" fill="#fef3c7" opacity="0.4"/>
+          <path d="M 0 130 L 50 90 L 90 110 L 140 75 L 180 95 L 230 60 L 280 85 L 330 70 L 360 90 L 360 200 L 0 200 Z" fill="url(#mtn-far)"/>
+          <path d="M 0 200 L 0 145 L 40 115 L 80 135 L 130 95 L 165 120 L 200 100 L 240 130 L 290 110 L 330 125 L 360 110 L 360 200 Z" fill="url(#mtn-mid)" opacity="0.85"/>
+          <path d="M 50 110 L 60 95 L 70 110 Z" fill="#ffffff" opacity="0.85"/>
+          <path d="M 175 100 L 200 60 L 220 100 Z" fill="#ffffff" opacity="0.9"/>
+          <path d="M 230 80 L 245 60 L 258 80 Z" fill="#ffffff" opacity="0.7"/>
+          <path d="M 0 200 L 0 165 L 50 145 L 100 160 L 150 135 L 200 155 L 260 140 L 320 155 L 360 145 L 360 200 Z" fill="url(#mtn-near)"/>
+          <line x1="0" y1="180" x2="360" y2="180" stroke="#0f172a" stroke-width="0.3" opacity="0.3"/>
+          <circle cx="80" cy="40" r="1.5" fill="#ffffff" opacity="0.7"/>
+          <circle cx="120" cy="25" r="1" fill="#ffffff" opacity="0.5"/>
+          <circle cx="320" cy="35" r="1.2" fill="#ffffff" opacity="0.6"/>
+        </svg>
+      </div>
       <div class="ig-caption">
         <div class="ig-stats">47 likes · 12 comments</div>
         <div class="ig-text">
@@ -1717,10 +1969,12 @@ function renderStep2() {
     <div class="card" style="background:var(--green-50); border-color:var(--green-100);">
       <div class="card-label" style="color:var(--green-700);">Signal captured · 47 milliseconds</div>
       <div style="font-size:13.5px; color:var(--slate-700); line-height:1.7;">
-        Even though Sarah does not know us, we now have three high-value signals from one post:
+        Sarah is already a known customer in our system — but until now we had no idea she was thinking about her next trip.
+        This single public post gives us three high-value signals:
         <strong style="color:var(--slate-900);">active travel intent</strong>,
         <strong style="color:var(--slate-900);">two specific destinations in mind</strong>, and
         <strong style="color:var(--slate-900);">post-Q4 burnout context</strong>.
+        Combined with the marketing consent she already gave us, we now have everything we need to re-engage thoughtfully.
       </div>
     </div>
 
@@ -1729,9 +1983,9 @@ function renderStep2() {
 }
 
 // ============================================================
-// STEP 3 — AI Analysis (uses LLM agent)
+// STEP 4 — AI Analysis (uses LLM agent)
 // ============================================================
-function renderStep3() {
+function renderStep4() {
   setTimeout(() => {
     addCDPEvent('LLM agent analyzing post: intent, sentiment, budget signals', 'ai', 'T+2s');
     setTimeout(() => addCDPEvent('Intent score computed: 78 of 100 (medium-high)', 'ai', 'T+4s'), 400);
@@ -1763,12 +2017,65 @@ function renderStep3() {
       <div class="card" style="border-color:var(--purple-100);">
         <div class="card-label" style="color:var(--purple-700);">Output · Structured intelligence</div>
         <div class="data-grid" style="grid-template-columns:1fr 1fr;">
+          <div class="data-cell"><div class="data-cell-label">Classification</div><div class="data-cell-value">Ready to book</div></div>
           <div class="data-cell"><div class="data-cell-label">Intent score</div><div class="data-cell-value">78 / 100</div></div>
-          <div class="data-cell"><div class="data-cell-label">Tier</div><div class="data-cell-value">Medium-high</div></div>
           <div class="data-cell"><div class="data-cell-label">Trip type</div><div class="data-cell-value">Solo · Mountain</div></div>
           <div class="data-cell"><div class="data-cell-label">Urgency</div><div class="data-cell-value">High</div></div>
           <div class="data-cell"><div class="data-cell-label">Window</div><div class="data-cell-value">30 to 60 days</div></div>
           <div class="data-cell"><div class="data-cell-label">Budget</div><div class="data-cell-value">USD 3-5K (premium)</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label" style="color:var(--purple-700);">Classification → Tier → Bulk action</div>
+      <div style="font-size:13px; color:var(--slate-700); line-height:1.65; margin-bottom:14px;">
+        Every captured post is first <strong>classified by intent type</strong>, then mapped to a <strong>tier</strong> that
+        determines campaign urgency and channel mix. Crucially, leads in the same classification can be
+        <strong>bulk-processed</strong> — generate one campaign template per tier, deploy across dozens of leads at once.
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:14px;">
+        <div style="padding:12px 14px; background:#fef2f2; border:1px solid #fecaca; border-left:4px solid #dc2626; border-radius:8px;">
+          <div style="font-size:10px; font-weight:700; color:#dc2626; text-transform:uppercase; letter-spacing:1px;">🔥 Hot tier</div>
+          <div style="font-size:13px; color:#0f172a; font-weight:600; margin-top:4px;">Ready to book</div>
+          <div style="font-size:11px; color:var(--slate-600); margin-top:2px;">80–100 score · urgency framing · time-bound offers</div>
+          <div style="font-size:11px; color:#dc2626; font-weight:700; margin-top:6px;">← Sarah's class</div>
+        </div>
+        <div style="padding:12px 14px; background:#fff7ed; border:1px solid #fed7aa; border-left:4px solid #ea580c; border-radius:8px;">
+          <div style="font-size:10px; font-weight:700; color:#ea580c; text-transform:uppercase; letter-spacing:1px;">🔥 Hot tier</div>
+          <div style="font-size:13px; color:#0f172a; font-weight:600; margin-top:4px;">Complaint (switching)</div>
+          <div style="font-size:11px; color:var(--slate-600); margin-top:2px;">60–85 score · empathy + alternative · win-back</div>
+        </div>
+        <div style="padding:12px 14px; background:#fefce8; border:1px solid #fef08a; border-left:4px solid #ca8a04; border-radius:8px;">
+          <div style="font-size:10px; font-weight:700; color:#ca8a04; text-transform:uppercase; letter-spacing:1px;">🌟 Warm tier</div>
+          <div style="font-size:13px; color:#0f172a; font-weight:600; margin-top:4px;">Active research</div>
+          <div style="font-size:11px; color:var(--slate-600); margin-top:2px;">60–79 score · comparison content · social proof</div>
+        </div>
+        <div style="padding:12px 14px; background:#f0fdf4; border:1px solid #bbf7d0; border-left:4px solid #16a34a; border-radius:8px;">
+          <div style="font-size:10px; font-weight:700; color:#16a34a; text-transform:uppercase; letter-spacing:1px;">🌟 Warm tier</div>
+          <div style="font-size:13px; color:#0f172a; font-weight:600; margin-top:4px;">Advocacy</div>
+          <div style="font-size:11px; color:var(--slate-600); margin-top:2px;">50–70 score · amplify + UGC reuse</div>
+        </div>
+        <div style="padding:12px 14px; background:#ecfeff; border:1px solid #a5f3fc; border-left:4px solid #0891b2; border-radius:8px;">
+          <div style="font-size:10px; font-weight:700; color:#0891b2; text-transform:uppercase; letter-spacing:1px;">💡 Cool tier</div>
+          <div style="font-size:13px; color:#0f172a; font-weight:600; margin-top:4px;">Competitor mention</div>
+          <div style="font-size:11px; color:var(--slate-600); margin-top:2px;">40–70 score · compare + differentiate</div>
+        </div>
+        <div style="padding:12px 14px; background:#faf5ff; border:1px solid #e9d5ff; border-left:4px solid #7c3aed; border-radius:8px;">
+          <div style="font-size:10px; font-weight:700; color:#7c3aed; text-transform:uppercase; letter-spacing:1px;">💡 Cool tier</div>
+          <div style="font-size:13px; color:#0f172a; font-weight:600; margin-top:4px;">Dreaming</div>
+          <div style="font-size:11px; color:var(--slate-600); margin-top:2px;">40–59 score · inspirational nurture · slow burn</div>
+        </div>
+      </div>
+
+      <div style="background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%); border:1px solid var(--blue-100); border-radius:10px; padding:14px 16px;">
+        <div style="font-size:11px; font-weight:700; color:var(--navy-800); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:6px;">Why tiers matter for scale</div>
+        <div style="font-size:12.5px; color:var(--slate-700); line-height:1.6;">
+          A scan that returns <strong>50 matched leads</strong> doesn't mean 50 unique campaigns. The Nurturing agent
+          groups leads by classification and generates <strong>one campaign template per tier</strong>, then personalizes
+          each touchpoint per-lead. <strong>10 minutes of human review</strong> approves campaigns for the entire pipeline —
+          versus weeks of manual copywriting for each lead individually.
         </div>
       </div>
     </div>
@@ -1800,82 +2107,197 @@ function renderStep3() {
 }
 
 // ============================================================
-// STEP 4 — Profile Build (CDP) with REAL signal sources
+// STEP 5 — Profile Build (CDP) with REAL identity stitching
 // ============================================================
-function renderStep4() {
+function renderStep5() {
   setTimeout(() => {
-    addCDPEvent('Identity stitching across email, mobile, and social', 'cdp', 'T+8s');
-    setTimeout(() => addCDPEvent('Match found: existing email open from 2023 newsletter', 'cdp', 'T+10s'), 400);
-    setTimeout(() => addCDPEvent('Profile saved: lead_id=VC_8472, status=DISCOVERED', 'cdp', 'T+12s'), 800);
+    addCDPEvent('Querying CDP: does this Instagram handle match any existing customer?', 'cdp', 'T+8s');
+    setTimeout(() => addCDPEvent('Match found: deterministic stitch via Instagram handle on file', 'cdp', 'T+10s'), 400);
+    setTimeout(() => addCDPEvent('Existing customer record loaded: VC_8472 (booked Cancun 2023)', 'cdp', 'T+11s'), 800);
+    setTimeout(() => addCDPEvent('Marketing consent verified: email opt-in (2023), SMS opt-in (2023)', 'cdp', 'T+12s'), 1200);
   }, 300);
 
   return `
-    ${banner('Day 0 · 9:47:15 AM CT', 'The CDP stitches scattered signals into one unified lead profile.', 'var(--green-600)')}
+    ${banner('Day 0 · 9:47:15 AM CT', 'The CDP matches the social signal back to an existing customer profile — with full provenance.', 'var(--green-600)')}
 
     <div class="agent-info">
-      <div class="agent-info-label">Customer Data Platform (CDP)</div>
-      <div class="agent-info-title">One profile, built from many real-world data sources</div>
+      <div class="agent-info-label">Customer Data Platform · Identity stitching</div>
+      <div class="agent-info-title">Match the signal to a known person — or stop.</div>
       <div class="agent-info-text">
-        The CDP combines <strong>first-party signals</strong> (data we own), <strong>second-party signals</strong>
-        (partner data we license), and <strong>publicly available signals</strong> (open social posts, search trends)
-        to build a single profile. No login required from Sarah.
+        Identity stitching uses two methods: <strong>deterministic</strong> (exact identifier match — high confidence)
+        and <strong>probabilistic</strong> (statistical match — lower confidence). Every link has a source and a confidence score.
+        If we cannot find lawful basis to contact the person, the journey ends here.
       </div>
     </div>
 
-    <div class="card" style="border-color:var(--blue-100); background:var(--blue-50);">
+    <div class="section-h">The match: how we connected the dots</div>
+
+    <div class="card" style="border-color:var(--green-100); background:var(--green-50);">
       <div style="display:flex; align-items:center; gap:14px; margin-bottom:14px;">
         <div style="width:48px; height:48px; border-radius:50%; background:var(--navy-800); color:white; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px;">SM</div>
-        <div>
+        <div style="flex:1; min-width:0;">
           <div style="font-size:16px; font-weight:700; color:var(--slate-900);">${PERSONA.name}</div>
-          <div style="font-size:11px; color:var(--slate-600); font-family:'JetBrains Mono', monospace; margin-top:2px;">lead_id: VC_8472</div>
+          <div style="font-size:11px; color:var(--slate-600); font-family:'JetBrains Mono', monospace; margin-top:2px;">lead_id: VC_8472 · existing customer since Jan 2023</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:10px; color:var(--green-700); font-family:'JetBrains Mono', monospace; font-weight:700; letter-spacing:0.5px;">OVERALL CONFIDENCE</div>
+          <div style="font-size:24px; font-weight:700; color:var(--green-700); line-height:1;">0.94</div>
         </div>
       </div>
-      <div class="data-grid">
-        <div class="data-cell"><div class="data-cell-label">Email</div><div class="data-cell-value" style="font-size:12px;">${PERSONA.email}</div></div>
-        <div class="data-cell"><div class="data-cell-label">Mobile</div><div class="data-cell-value" style="font-size:12px;">${PERSONA.phone}</div></div>
-        <div class="data-cell"><div class="data-cell-label">ZIP</div><div class="data-cell-value">${PERSONA.zip}</div></div>
-        <div class="data-cell"><div class="data-cell-label">Segment</div><div class="data-cell-value">Premium · Solo</div></div>
-      </div>
     </div>
 
-    <div class="section-h">Where each signal came from</div>
+    <div class="section-h">Identity graph (every identifier with source + confidence)</div>
+
+    <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:20px;">
+
+      <div class="card" style="padding:14px 18px; border-left:4px solid var(--green-600); border-radius:0 12px 12px 0; margin-bottom:0;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:14px;">
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span class="badge" style="background:var(--green-50); color:var(--green-700); border-color:var(--green-100);">DETERMINISTIC</span>
+              <span style="font-size:13px; font-weight:600; color:var(--slate-900);">Instagram handle</span>
+            </div>
+            <div style="font-size:12px; color:var(--slate-600); font-family:'JetBrains Mono', monospace;">@sarah.wanders</div>
+            <div style="font-size:11.5px; color:var(--slate-500); margin-top:4px;">Source: Sarah self-declared this handle in 2023 booking form ("share your social so we can tag you")</div>
+          </div>
+          <div style="text-align:right; flex-shrink:0;">
+            <div style="font-size:10px; color:var(--slate-500); font-family:'JetBrains Mono', monospace; font-weight:700;">CONFIDENCE</div>
+            <div style="font-size:18px; font-weight:700; color:var(--green-700); line-height:1; margin-top:2px;">1.00</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:14px 18px; border-left:4px solid var(--green-600); border-radius:0 12px 12px 0; margin-bottom:0;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:14px;">
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span class="badge" style="background:var(--green-50); color:var(--green-700); border-color:var(--green-100);">DETERMINISTIC</span>
+              <span style="font-size:13px; font-weight:600; color:var(--slate-900);">Email address</span>
+            </div>
+            <div style="font-size:12px; color:var(--slate-600); font-family:'JetBrains Mono', monospace;">${PERSONA.email}</div>
+            <div style="font-size:11.5px; color:var(--slate-500); margin-top:4px;">Source: 2023 booking form · validated · opted in to marketing</div>
+          </div>
+          <div style="text-align:right; flex-shrink:0;">
+            <div style="font-size:10px; color:var(--slate-500); font-family:'JetBrains Mono', monospace; font-weight:700;">CONFIDENCE</div>
+            <div style="font-size:18px; font-weight:700; color:var(--green-700); line-height:1; margin-top:2px;">1.00</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:14px 18px; border-left:4px solid var(--green-600); border-radius:0 12px 12px 0; margin-bottom:0;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:14px;">
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span class="badge" style="background:var(--green-50); color:var(--green-700); border-color:var(--green-100);">DETERMINISTIC</span>
+              <span style="font-size:13px; font-weight:600; color:var(--slate-900);">Phone number</span>
+            </div>
+            <div style="font-size:12px; color:var(--slate-600); font-family:'JetBrains Mono', monospace;">${PERSONA.phone}</div>
+            <div style="font-size:11.5px; color:var(--slate-500); margin-top:4px;">Source: 2023 booking · TCPA-compliant SMS opt-in recorded</div>
+          </div>
+          <div style="text-align:right; flex-shrink:0;">
+            <div style="font-size:10px; color:var(--slate-500); font-family:'JetBrains Mono', monospace; font-weight:700;">CONFIDENCE</div>
+            <div style="font-size:18px; font-weight:700; color:var(--green-700); line-height:1; margin-top:2px;">1.00</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:14px 18px; border-left:4px solid var(--blue-500); border-radius:0 12px 12px 0; margin-bottom:0;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:14px;">
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span class="badge" style="background:var(--blue-50); color:var(--navy-800); border-color:var(--blue-100);">DETERMINISTIC</span>
+              <span style="font-size:13px; font-weight:600; color:var(--slate-900);">Web cookie</span>
+            </div>
+            <div style="font-size:12px; color:var(--slate-600); font-family:'JetBrains Mono', monospace;">_ga.847291 (Austin, TX)</div>
+            <div style="font-size:11.5px; color:var(--slate-500); margin-top:4px;">Source: stitched when she logged in to view 2023 booking · 3 anonymous visits since</div>
+          </div>
+          <div style="text-align:right; flex-shrink:0;">
+            <div style="font-size:10px; color:var(--slate-500); font-family:'JetBrains Mono', monospace; font-weight:700;">CONFIDENCE</div>
+            <div style="font-size:18px; font-weight:700; color:var(--green-700); line-height:1; margin-top:2px;">0.98</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:14px 18px; border-left:4px solid var(--amber-600); border-radius:0 12px 12px 0; margin-bottom:0;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:14px;">
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span class="badge" style="background:var(--amber-50); color:var(--amber-700); border-color:var(--amber-100);">PROBABILISTIC</span>
+              <span style="font-size:13px; font-weight:600; color:var(--slate-900);">Mobile advertising ID</span>
+            </div>
+            <div style="font-size:12px; color:var(--slate-600); font-family:'JetBrains Mono', monospace;">a8b7c6...d3 (LiveRamp RampID: XYZ-123)</div>
+            <div style="font-size:11.5px; color:var(--slate-500); margin-top:4px;">Source: LiveRamp identity graph match (hashed email → device ID)</div>
+          </div>
+          <div style="text-align:right; flex-shrink:0;">
+            <div style="font-size:10px; color:var(--slate-500); font-family:'JetBrains Mono', monospace; font-weight:700;">CONFIDENCE</div>
+            <div style="font-size:18px; font-weight:700; color:var(--amber-700); line-height:1; margin-top:2px;">0.79</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:14px 18px; border-left:4px solid var(--amber-600); border-radius:0 12px 12px 0; margin-bottom:0;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:14px;">
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span class="badge" style="background:var(--amber-50); color:var(--amber-700); border-color:var(--amber-100);">PROBABILISTIC</span>
+              <span style="font-size:13px; font-weight:600; color:var(--slate-900);">Demographic overlay</span>
+            </div>
+            <div style="font-size:12px; color:var(--slate-600); font-family:'JetBrains Mono', monospace;">Income band: $100K-200K · Household: 1 · Age range: 30-39</div>
+            <div style="font-size:11.5px; color:var(--slate-500); margin-top:4px;">Source: Acxiom demographic file (matched by hashed email + ZIP)</div>
+          </div>
+          <div style="text-align:right; flex-shrink:0;">
+            <div style="font-size:10px; color:var(--slate-500); font-family:'JetBrains Mono', monospace; font-weight:700;">CONFIDENCE</div>
+            <div style="font-size:18px; font-weight:700; color:var(--amber-700); line-height:1; margin-top:2px;">0.85</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:14px 18px; border-left:4px solid var(--red-600); border-radius:0 12px 12px 0; margin-bottom:0; background:var(--red-50);">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:14px;">
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+              <span class="badge" style="background:var(--red-50); color:var(--red-700); border-color:var(--red-100);">NOT LINKED</span>
+              <span style="font-size:13px; font-weight:600; color:var(--slate-900);">Home address, DOB, SSN, payment details</span>
+            </div>
+            <div style="font-size:11.5px; color:var(--slate-500); margin-top:4px;">We do not collect this data unless required for an actual booking</div>
+          </div>
+          <div style="text-align:right; flex-shrink:0; font-size:18px; color:var(--red-600); font-weight:700;">✕</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-h">What enabled this match</div>
 
     <div class="source-grid">
-      <div class="source-card">
-        ${badge('instagram')}
-        <div class="source-card-title">Instagram public post</div>
-        <div class="source-card-detail">Caption text · hashtags · geo-tag · public profile data via Meta Graph API</div>
+      <div class="source-card" style="background:var(--green-50); border-color:var(--green-100);">
+        <span class="badge badge-cdp">First-party</span>
+        <div class="source-card-title">2023 booking record</div>
+        <div class="source-card-detail">Sarah gave us her email, phone, and Instagram handle when booking Cancun. All consents recorded.</div>
       </div>
-      <div class="source-card">
-        <span class="badge badge-website">Mailing list</span>
-        <div class="source-card-title">Email match</div>
-        <div class="source-card-detail">Sarah's email opened our 2023 newsletter (cross-reference via hashed ID)</div>
+      <div class="source-card" style="background:var(--green-50); border-color:var(--green-100);">
+        <span class="badge badge-cdp">First-party</span>
+        <div class="source-card-title">Newsletter subscription</div>
+        <div class="source-card-detail">Active subscriber. Renewed consent every 12 months per CAN-SPAM and GDPR best practice.</div>
       </div>
-      <div class="source-card">
-        <span class="badge badge-google">Search trend</span>
-        <div class="source-card-title">Search co-occurrence</div>
-        <div class="source-card-detail">Region-level Google Trends shows "banff october" rising in Austin DMA</div>
+      <div class="source-card" style="background:var(--blue-50); border-color:var(--blue-100);">
+        <span class="badge badge-google">Second-party</span>
+        <div class="source-card-title">Brandwatch listening</div>
+        <div class="source-card-detail">Picked up her public Instagram post via licensed Meta Graph API access.</div>
       </div>
-      <div class="source-card">
-        <span class="badge badge-ads">Identity provider</span>
-        <div class="source-card-title">Phone match</div>
-        <div class="source-card-detail">LiveRamp / Experian ID resolution from email + name + ZIP</div>
-      </div>
-      <div class="source-card">
-        ${badge('cdp')}
-        <div class="source-card-title">Demographics overlay</div>
-        <div class="source-card-detail">Acxiom or Experian demographic file — household income band, life stage</div>
-      </div>
-      <div class="source-card">
-        ${badge('cdp')}
-        <div class="source-card-title">Behavioral history</div>
-        <div class="source-card-detail">3 anonymous web visits (cookie ID stitched once email matched)</div>
+      <div class="source-card" style="background:var(--blue-50); border-color:var(--blue-100);">
+        <span class="badge badge-ads">Second-party</span>
+        <div class="source-card-title">LiveRamp resolution</div>
+        <div class="source-card-detail">Hashed email matched to advertising ID for cross-device retargeting.</div>
       </div>
     </div>
 
-    <div class="card" style="background:var(--green-50); border-color:var(--green-100); margin-top:16px;">
-      <div style="font-size:13.5px; color:var(--green-700); font-weight:600; text-align:center;">
-        Identity stitched · Score 78 · 7 hooks · Ready for journey orchestration
+    <div class="highlight" style="margin-top:16px; background:var(--green-50); border-color:var(--green-100);">
+      <div class="highlight-label" style="color:var(--green-700);">Lawful basis confirmed</div>
+      <div class="highlight-text">
+        Existing customer relationship + active marketing consent + recent engagement = we can proceed.
+        If <strong>any</strong> of these were missing, the journey would stop here. The CDP enforces this at the gate,
+        not the campaign tool.
       </div>
     </div>
 
@@ -1884,9 +2306,9 @@ function renderStep4() {
 }
 
 // ============================================================
-// STEP 5 — Strategy
+// STEP 6 — Strategy
 // ============================================================
-function renderStep5() {
+function renderStep6() {
   setTimeout(() => {
     addCDPEvent('Nurturing agent activated for lead VC_8472', 'jo', 'T+15s');
     setTimeout(() => addCDPEvent('Multi-channel campaign generated: 5 touchpoints over 7 days', 'ai', 'T+18s'), 400);
@@ -1960,14 +2382,46 @@ function renderStep5() {
       </div>
     </div>
 
+    <div class="card" style="border-color:var(--blue-100); background:linear-gradient(135deg,#eff6ff 0%,#ffffff 100%);">
+      <div class="card-label" style="color:var(--navy-800);">Bulk generation · same template, individual personalization</div>
+      <div style="font-size:12.5px; color:var(--slate-700); line-height:1.65; margin-bottom:10px;">
+        Sarah is one of <strong>several "Ready to Book" leads</strong> identified in this scan. The Nurturing agent
+        generates the campaign template <strong>once for the tier</strong>, then personalizes each touchpoint
+        per-lead — Sarah gets Banff-specific copy, another lead gets Maldives, another gets Tokyo —
+        all from the same template, deployed in parallel.
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:8px;">
+        <div style="background:white; border:1px solid var(--slate-200); border-radius:8px; padding:10px 12px;">
+          <div style="font-size:10px; color:var(--slate-600); text-transform:uppercase; font-weight:700; letter-spacing:0.5px;">🔥 Hot tier</div>
+          <div style="font-size:18px; font-weight:800; color:#dc2626; margin-top:4px;">3</div>
+          <div style="font-size:10.5px; color:var(--slate-600);">leads · same template</div>
+        </div>
+        <div style="background:white; border:1px solid var(--slate-200); border-radius:8px; padding:10px 12px;">
+          <div style="font-size:10px; color:var(--slate-600); text-transform:uppercase; font-weight:700; letter-spacing:0.5px;">🌟 Warm tier</div>
+          <div style="font-size:18px; font-weight:800; color:#ca8a04; margin-top:4px;">5</div>
+          <div style="font-size:10.5px; color:var(--slate-600);">leads · same template</div>
+        </div>
+        <div style="background:white; border:1px solid var(--slate-200); border-radius:8px; padding:10px 12px;">
+          <div style="font-size:10px; color:var(--slate-600); text-transform:uppercase; font-weight:700; letter-spacing:0.5px;">💡 Cool tier</div>
+          <div style="font-size:18px; font-weight:800; color:#7c3aed; margin-top:4px;">4</div>
+          <div style="font-size:10.5px; color:var(--slate-600);">leads · same template</div>
+        </div>
+        <div style="background:white; border:1px solid var(--slate-200); border-radius:8px; padding:10px 12px;">
+          <div style="font-size:10px; color:var(--slate-600); text-transform:uppercase; font-weight:700; letter-spacing:0.5px;">Total touchpoints</div>
+          <div style="font-size:18px; font-weight:800; color:var(--navy-800); margin-top:4px;">60</div>
+          <div style="font-size:10.5px; color:var(--slate-600);">across 12 leads · 5 days</div>
+        </div>
+      </div>
+    </div>
+
     ${nextBtn()}
   `;
 }
 
 // ============================================================
-// STEP 6 — Email + SMS
+// STEP 7 — Email + SMS
 // ============================================================
-function renderStep6() {
+function renderStep7() {
   setTimeout(() => {
     addCDPEvent('Day 1 · email sent — subject: "The Rockies called"', 'email', 'Day 1');
     setTimeout(() => addCDPEvent('Email opened — 3 hours after send', 'email', 'Day 1'), 400);
@@ -2004,9 +2458,42 @@ function renderStep6() {
             Saw your post about Q4 burning you out and craving altitude. I get it — sometimes the only fix is the Rockies.
             <br><br>
             We had a photographer back from <strong>Banff's Lake Louise region</strong> last week. She caught the larches
-            turning gold. Said the silence at sunrise was the kind most people only read about. Three of her shots are attached
+            turning gold. Said the silence at sunrise was the kind most people only read about. Three of her shots are below
             — no pitch, just thought you might want to see.
-            <br><br>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin:12px 0;">
+              <svg viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="width:100%; height:70px; display:block; border-radius:6px;">
+                <defs>
+                  <linearGradient id="ph1-sky" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#dbeafe"/><stop offset="100%" stop-color="#fef3c7"/></linearGradient>
+                </defs>
+                <rect width="100" height="70" fill="url(#ph1-sky)"/>
+                <path d="M 0 50 L 25 25 L 50 40 L 75 20 L 100 35 L 100 70 L 0 70 Z" fill="#475569"/>
+                <path d="M 23 28 L 28 20 L 33 30 Z M 73 23 L 78 16 L 83 26 Z" fill="#ffffff"/>
+                <rect y="55" width="100" height="15" fill="#0d9488" opacity="0.7"/>
+              </svg>
+              <svg viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="width:100%; height:70px; display:block; border-radius:6px;">
+                <defs>
+                  <linearGradient id="ph2-sky" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fbcfe8"/><stop offset="100%" stop-color="#fdba74"/></linearGradient>
+                </defs>
+                <rect width="100" height="70" fill="url(#ph2-sky)"/>
+                <circle cx="75" cy="22" r="8" fill="#fef3c7"/>
+                <path d="M 0 55 L 30 30 L 60 45 L 85 25 L 100 38 L 100 70 L 0 70 Z" fill="#1e293b"/>
+                <path d="M 28 33 L 33 24 L 38 35 Z" fill="#ffffff"/>
+              </svg>
+              <svg viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="width:100%; height:70px; display:block; border-radius:6px;">
+                <defs>
+                  <linearGradient id="ph3-sky" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#bfdbfe"/><stop offset="100%" stop-color="#fef3c7"/></linearGradient>
+                </defs>
+                <rect width="100" height="70" fill="url(#ph3-sky)"/>
+                <path d="M 0 45 L 20 25 L 40 40 L 65 18 L 90 32 L 100 28 L 100 50 L 0 50 Z" fill="#64748b"/>
+                <path d="M 63 22 L 68 14 L 73 24 Z" fill="#ffffff"/>
+                <rect y="50" width="100" height="20" fill="#fbbf24" opacity="0.6"/>
+                <circle cx="20" cy="55" r="2" fill="#f59e0b"/>
+                <circle cx="50" cy="58" r="2" fill="#f59e0b"/>
+                <circle cx="80" cy="55" r="2" fill="#f59e0b"/>
+              </svg>
+            </div>
+
             If you ever want help planning Banff or Jackson Hole without the tourist circuit, I am one reply away.
             <br><br>
             — Maya<br>
@@ -2059,9 +2546,9 @@ function renderStep6() {
 }
 
 // ============================================================
-// STEP 7 — Retargeting
+// STEP 8 — Retargeting
 // ============================================================
-function renderStep7() {
+function renderStep8() {
   setTimeout(() => {
     addCDPEvent('Day 3 · Instagram DM sent (sponsored placement)', 'instagram', 'Day 3');
     setTimeout(() => addCDPEvent('Retargeting ads activated on Google + Meta networks', 'ads', 'Day 3'), 400);
@@ -2094,16 +2581,43 @@ function renderStep7() {
             <div style="font-size:10px; color:var(--slate-500);">Verified · Responds in 1hr</div>
           </div>
         </div>
-        <div style="background:var(--slate-100); border-radius:14px; padding:10px 12px; max-width:90%; margin-bottom:8px;">
+        <div style="background:var(--slate-100); border-radius:14px; padding:10px 12px; max-width:90%; margin-bottom:10px;">
           <div style="font-size:12.5px; color:var(--slate-900); line-height:1.5;">
             Hey Sarah, loved your Cancun throwback and the Banff shoutout. We just dropped a story on
             "5 Banff trails locals keep quiet about" — thought you would want first look.
           </div>
         </div>
-        <div style="background:var(--white); border:1px solid var(--slate-200); border-radius:8px; padding:10px; display:flex; gap:10px; align-items:center;">
-          <div style="width:42px; height:42px; background:var(--slate-200); border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--slate-500); font-weight:600;">IMG</div>
-          <div>
-            <div style="font-size:12px; font-weight:600; color:var(--slate-900);">5 Banff trails locals keep quiet</div>
+
+        <div style="background:var(--white); border:1px solid var(--slate-200); border-radius:10px; overflow:hidden;">
+          <div style="position:relative; height:140px; overflow:hidden;">
+            <svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="width:100%; height:100%; display:block;">
+              <defs>
+                <linearGradient id="lake-sky" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#dbeafe"/>
+                  <stop offset="100%" stop-color="#bfdbfe"/>
+                </linearGradient>
+                <linearGradient id="lake-water" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#3b82f6"/>
+                  <stop offset="100%" stop-color="#1d4ed8"/>
+                </linearGradient>
+                <linearGradient id="forest" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#15803d"/>
+                  <stop offset="100%" stop-color="#14532d"/>
+                </linearGradient>
+              </defs>
+              <rect width="360" height="140" fill="url(#lake-sky)"/>
+              <path d="M 0 70 L 50 35 L 100 60 L 150 25 L 200 50 L 260 30 L 320 55 L 360 40 L 360 90 L 0 90 Z" fill="#475569"/>
+              <path d="M 145 30 L 165 20 L 180 38 Z" fill="#ffffff"/>
+              <path d="M 250 38 L 268 28 L 285 42 Z" fill="#ffffff"/>
+              <path d="M 0 90 L 0 80 L 60 70 L 120 78 L 200 65 L 280 75 L 360 68 L 360 90 Z" fill="url(#forest)"/>
+              <rect y="90" width="360" height="50" fill="url(#lake-water)"/>
+              <path d="M 0 105 L 360 105" stroke="#ffffff" stroke-width="0.5" opacity="0.3"/>
+              <path d="M 0 120 L 360 120" stroke="#ffffff" stroke-width="0.5" opacity="0.2"/>
+              <path d="M 145 105 L 165 95 L 180 113 Z M 250 113 L 268 103 L 285 117 Z" fill="#1e3a8a" opacity="0.5"/>
+            </svg>
+          </div>
+          <div style="padding:10px 12px;">
+            <div style="font-size:12px; font-weight:600; color:var(--slate-900); margin-bottom:2px;">5 Banff trails locals keep quiet</div>
             <div style="font-size:11px; color:var(--slate-500);">voyage.com · 4 min read</div>
           </div>
         </div>
@@ -2117,13 +2631,39 @@ function renderStep7() {
         <div style="background:var(--white); border:1px solid var(--slate-200); border-radius:10px; overflow:hidden;">
           <div style="background:var(--slate-100); padding:6px 10px; border-bottom:1px solid var(--slate-200); font-size:10px; color:var(--slate-500); font-family:'JetBrains Mono', monospace;">instagram.com</div>
           <div style="padding:14px;">
-            <div style="background:var(--navy-800); color:white; border-radius:8px; padding:14px;">
-              <div style="font-size:10px; color:rgba(255,255,255,0.7); margin-bottom:6px; font-family:'JetBrains Mono', monospace;">SPONSORED</div>
-              <div style="font-size:14px; font-weight:700; margin-bottom:4px;">Banff without the tour buses</div>
-              <div style="font-size:11px; opacity:0.9; margin-bottom:10px; line-height:1.5;">
-                6-day curated escape · Photographer-led · Boutique mountain lodges
+            <div style="background:var(--white); border:1px solid var(--slate-200); border-radius:8px; overflow:hidden;">
+              <div style="position:relative; height:140px; overflow:hidden;">
+                <svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="width:100%; height:100%; display:block;">
+                  <defs>
+                    <linearGradient id="dawn-sky" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stop-color="#fde68a"/>
+                      <stop offset="50%" stop-color="#fb923c"/>
+                      <stop offset="100%" stop-color="#dc2626"/>
+                    </linearGradient>
+                    <linearGradient id="peak-1" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stop-color="#1e3a8a"/>
+                      <stop offset="100%" stop-color="#0f172a"/>
+                    </linearGradient>
+                  </defs>
+                  <rect width="360" height="140" fill="url(#dawn-sky)"/>
+                  <circle cx="180" cy="50" r="20" fill="#fef3c7" opacity="0.95"/>
+                  <circle cx="180" cy="50" r="32" fill="#fef3c7" opacity="0.4"/>
+                  <path d="M 0 140 L 0 90 L 50 70 L 110 95 L 170 55 L 230 80 L 290 65 L 360 85 L 360 140 Z" fill="url(#peak-1)"/>
+                  <path d="M 165 60 L 175 45 L 185 65 Z" fill="#ffffff" opacity="0.95"/>
+                  <path d="M 100 80 L 115 65 L 125 85 Z" fill="#ffffff" opacity="0.85"/>
+                  <path d="M 280 70 L 295 55 L 308 75 Z" fill="#ffffff" opacity="0.8"/>
+                  <line x1="0" y1="115" x2="360" y2="115" stroke="#0f172a" stroke-width="0.5" opacity="0.4"/>
+                  <line x1="0" y1="125" x2="360" y2="125" stroke="#0f172a" stroke-width="0.5" opacity="0.3"/>
+                </svg>
               </div>
-              <button style="background:white; color:var(--navy-800); border:none; padding:6px 14px; border-radius:6px; font-weight:600; font-size:11px; cursor:pointer;">See itinerary →</button>
+              <div style="padding:14px; background:var(--navy-800); color:white;">
+                <div style="font-size:10px; color:rgba(255,255,255,0.7); margin-bottom:6px; font-family:'JetBrains Mono', monospace; letter-spacing:0.5px;">SPONSORED</div>
+                <div style="font-size:14px; font-weight:700; margin-bottom:4px;">Banff without the tour buses</div>
+                <div style="font-size:11px; opacity:0.9; margin-bottom:10px; line-height:1.5;">
+                  6-day curated escape · Photographer-led · Boutique mountain lodges
+                </div>
+                <button style="background:white; color:var(--navy-800); border:none; padding:6px 14px; border-radius:6px; font-weight:600; font-size:11px; cursor:pointer;">See itinerary →</button>
+              </div>
             </div>
             <div style="margin-top:10px; font-size:11px; color:var(--slate-600); display:flex; gap:14px;">
               <span><strong>Impressions:</strong> 247</span>
@@ -2166,9 +2706,9 @@ function renderStep7() {
 }
 
 // ============================================================
-// STEP 8 — Hot Lead
+// STEP 9 — Hot Lead
 // ============================================================
-function renderStep8() {
+function renderStep9() {
   setTimeout(() => {
     addCDPEvent('Hot lead trigger fired: 4 engagement signals in 48 hours', 'jo', 'Day 5');
     setTimeout(() => addCDPEvent('Score updated: 78 → 92 (high intent)', 'cdp', 'Day 5'), 400);
@@ -2219,6 +2759,44 @@ function renderStep8() {
         <div class="email-meta-row">From: <strong>Maya at Voyage</strong></div>
         <div class="email-meta-row">Subject: <strong>Your 6-day Banff escape (just for you, no pressure)</strong></div>
       </div>
+
+      <div style="height:160px; overflow:hidden; position:relative; border-bottom:1px solid var(--slate-200);">
+        <svg viewBox="0 0 600 160" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" style="width:100%; height:100%; display:block;">
+          <defs>
+            <linearGradient id="larch-sky" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#dbeafe"/>
+              <stop offset="100%" stop-color="#fef3c7"/>
+            </linearGradient>
+            <linearGradient id="larch-mtn" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#64748b"/>
+              <stop offset="100%" stop-color="#334155"/>
+            </linearGradient>
+            <linearGradient id="larch-water" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#0d9488"/>
+              <stop offset="100%" stop-color="#134e4a"/>
+            </linearGradient>
+          </defs>
+          <rect width="600" height="160" fill="url(#larch-sky)"/>
+          <path d="M 0 80 L 80 30 L 160 60 L 240 25 L 320 50 L 400 30 L 480 55 L 560 35 L 600 50 L 600 110 L 0 110 Z" fill="url(#larch-mtn)"/>
+          <path d="M 230 35 L 250 15 L 270 40 Z M 310 38 L 330 18 L 350 42 Z M 390 35 L 410 20 L 430 40 Z" fill="#ffffff" opacity="0.9"/>
+          <rect y="110" width="600" height="50" fill="url(#larch-water)"/>
+          <path d="M 0 110 L 80 80 L 160 88 L 240 75 L 320 82 L 400 78 L 480 83 L 560 75 L 600 80" stroke="none" fill="#fbbf24" opacity="0.85"/>
+          <path d="M 0 110 L 0 95 L 80 80 L 160 88 L 240 75 L 320 82 L 400 78 L 480 83 L 560 75 L 600 80 L 600 110 Z" fill="#fbbf24" opacity="0.7"/>
+          <circle cx="60" cy="92" r="3" fill="#f59e0b"/>
+          <circle cx="120" cy="88" r="2.5" fill="#fbbf24"/>
+          <circle cx="200" cy="85" r="3.5" fill="#f59e0b"/>
+          <circle cx="280" cy="80" r="2.5" fill="#fbbf24"/>
+          <circle cx="360" cy="86" r="3" fill="#f59e0b"/>
+          <circle cx="440" cy="82" r="2.5" fill="#fbbf24"/>
+          <circle cx="520" cy="84" r="3" fill="#f59e0b"/>
+          <path d="M 0 130 L 600 130" stroke="#ffffff" stroke-width="0.3" opacity="0.4"/>
+          <path d="M 0 145 L 600 145" stroke="#ffffff" stroke-width="0.3" opacity="0.3"/>
+          <path d="M 230 130 L 250 120 L 270 140 Z" fill="#0d9488" opacity="0.4"/>
+          <path d="M 390 132 L 410 122 L 430 140 Z" fill="#0d9488" opacity="0.4"/>
+        </svg>
+        <div style="position:absolute; bottom:8px; left:12px; background:rgba(15,23,42,0.7); color:white; padding:3px 8px; border-radius:4px; font-size:10px; font-family:'JetBrains Mono', monospace; letter-spacing:0.5px;">LAKE LOUISE · OCTOBER LARCHES</div>
+      </div>
+
       <div class="email-body">
         Hey Sarah,<br><br>
         Saw you have been browsing our Banff pages a few times — sketched out what 6 days could look like, based on
@@ -2263,9 +2841,9 @@ function renderStep8() {
 }
 
 // ============================================================
-// STEP 9 — Handoff
+// STEP 10 — Handoff
 // ============================================================
-function renderStep9() {
+function renderStep10() {
   setTimeout(() => {
     addCDPEvent('Sarah replied: "Yes, I want to know more"', 'email', 'Day 6');
     setTimeout(() => addCDPEvent('Handoff to Acquisition agent triggered', 'jo', 'Day 6'), 400);
@@ -2317,6 +2895,86 @@ function renderStep9() {
     </div>
 
     <div class="card">
+      <div class="card-label" style="color:var(--purple-700);">Acquisition pipeline · pending leads queue</div>
+      <div style="font-size:12.5px; color:var(--slate-700); line-height:1.65; margin-bottom:14px;">
+        Sarah doesn't go straight into a chat blindly. She lands in the <strong>Acquisition pipeline</strong> — a
+        queue of nurtured leads ready for live booking, each with full context loaded. A booking specialist (or
+        the agent itself) picks up each lead with one click, and the conversation starts with everything pre-filled:
+        her destinations, budget, window, and the campaign she engaged with.
+      </div>
+
+      <div style="background:white; border:1px solid var(--slate-200); border-radius:10px; padding:14px 16px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <div style="font-size:10px; font-weight:700; color:var(--slate-600); text-transform:uppercase; letter-spacing:1.2px;">Pending acquisition pipeline</div>
+          <div style="background:var(--navy-800); color:white; padding:3px 10px; border-radius:10px; font-size:11px; font-weight:700;">3 leads waiting</div>
+        </div>
+
+        <div style="background:white; border:1px solid var(--slate-200); border-left:5px solid #dc2626; border-radius:10px; padding:14px 16px; margin-bottom:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:8px;">
+            <div>
+              <div style="display:flex; gap:6px; align-items:center; margin-bottom:6px;">
+                <span style="background:#fef2f2; color:#dc2626; padding:3px 8px; border-radius:5px; font-size:10px; font-weight:700; text-transform:uppercase;">🔥 Ready to Book</span>
+                <span style="background:#f0fdf4; color:#16a34a; padding:3px 8px; border-radius:5px; font-size:10px; font-weight:700;">Path A</span>
+                <span style="background:var(--slate-100); color:var(--slate-700); padding:3px 8px; border-radius:5px; font-size:10px; font-weight:600;">78/100</span>
+              </div>
+              <div style="font-size:14px; font-weight:700; color:var(--slate-900);">@sarah.wanders</div>
+              <div style="font-size:11px; color:var(--slate-600);">Campaign: <strong style="color:var(--slate-700);">Rockies Reset</strong></div>
+            </div>
+            <div style="font-size:10px; color:var(--slate-500); font-family:monospace;">Transferred 22:15:08</div>
+          </div>
+          <div style="background:var(--slate-50); border:1px solid var(--slate-100); border-radius:6px; padding:8px 10px; margin-bottom:10px; font-size:11px; color:var(--slate-700);">
+            <strong>Wants:</strong> Banff, Jackson Hole · <strong>Budget:</strong> USD 3-5K · <strong>Window:</strong> 30-60 days
+          </div>
+          <button style="background:linear-gradient(135deg,#f97316 0%,#ea580c 100%); color:white; border:none; padding:8px 14px; border-radius:6px; font-size:11px; font-weight:600; box-shadow:0 2px 4px rgba(249,115,22,0.25);">
+            🚀 Start booking conversation
+          </button>
+        </div>
+
+        <div style="background:white; border:1px solid var(--slate-200); border-left:5px solid #ea580c; border-radius:10px; padding:14px 16px; margin-bottom:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04); opacity:0.85;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:8px;">
+            <div>
+              <div style="display:flex; gap:6px; align-items:center; margin-bottom:6px;">
+                <span style="background:#fff7ed; color:#ea580c; padding:3px 8px; border-radius:5px; font-size:10px; font-weight:700; text-transform:uppercase;">🔥 Complaint</span>
+                <span style="background:#fffbeb; color:#d97706; padding:3px 8px; border-radius:5px; font-size:10px; font-weight:700;">Path B</span>
+                <span style="background:var(--slate-100); color:var(--slate-700); padding:3px 8px; border-radius:5px; font-size:10px; font-weight:600;">85/100</span>
+              </div>
+              <div style="font-size:14px; font-weight:700; color:var(--slate-900);">@fed_up_flyer</div>
+              <div style="font-size:11px; color:var(--slate-600);">Campaign: <strong style="color:var(--slate-700);">Better Carrier Switch</strong></div>
+            </div>
+            <div style="font-size:10px; color:var(--slate-500); font-family:monospace;">Transferred 22:14:51</div>
+          </div>
+          <div style="background:var(--slate-50); border:1px solid var(--slate-100); border-radius:6px; padding:8px 10px; font-size:11px; color:var(--slate-700);">
+            <strong>Wants:</strong> Reliable airline alternatives · <strong>Switching from:</strong> American Airlines
+          </div>
+        </div>
+
+        <div style="background:white; border:1px solid var(--slate-200); border-left:5px solid #ca8a04; border-radius:10px; padding:14px 16px; box-shadow:0 1px 3px rgba(0,0,0,0.04); opacity:0.85;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:8px;">
+            <div>
+              <div style="display:flex; gap:6px; align-items:center; margin-bottom:6px;">
+                <span style="background:#fefce8; color:#ca8a04; padding:3px 8px; border-radius:5px; font-size:10px; font-weight:700; text-transform:uppercase;">🌟 Active Research</span>
+                <span style="background:#fffbeb; color:#d97706; padding:3px 8px; border-radius:5px; font-size:10px; font-weight:700;">Path B</span>
+                <span style="background:var(--slate-100); color:var(--slate-700); padding:3px 8px; border-radius:5px; font-size:10px; font-weight:600;">72/100</span>
+              </div>
+              <div style="font-size:14px; font-weight:700; color:var(--slate-900);">@jenna_explores</div>
+              <div style="font-size:11px; color:var(--slate-600);">Campaign: <strong style="color:var(--slate-700);">Honeymoon · Hawaii vs Maldives</strong></div>
+            </div>
+            <div style="font-size:10px; color:var(--slate-500); font-family:monospace;">Transferred 22:14:33</div>
+          </div>
+          <div style="background:var(--slate-50); border:1px solid var(--slate-100); border-radius:6px; padding:8px 10px; font-size:11px; color:var(--slate-700);">
+            <strong>Wants:</strong> Hawaii, Maldives · <strong>Budget:</strong> USD 8-10K · <strong>Window:</strong> October
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px; font-size:11.5px; color:var(--slate-600); line-height:1.6; font-style:italic;">
+        The pipeline is what makes this <em>scalable</em>. The Nurturing agent might be running campaigns for hundreds
+        of leads in parallel — but only the ones who engage land in this queue. Human + Acquisition agent attention is
+        spent on <strong>warm, ready-to-book leads</strong> with full context, not cold outreach.
+      </div>
+    </div>
+
+    <div class="card">
       <div class="card-label">Acquisition agent · live tools</div>
       <div class="tools-grid">
         <div class="tool-cell">
@@ -2355,9 +3013,9 @@ function renderStep9() {
 }
 
 // ============================================================
-// STEP 10 — Booking Conversation
+// STEP 11 — Booking Conversation
 // ============================================================
-function renderStep10() {
+function renderStep11() {
   setTimeout(() => {
     addCDPEvent('Tool call: get_weather(Banff, Oct 14-19)', 'ai', 'Day 6');
     setTimeout(() => addCDPEvent('Tool call: search_flights(AUS → YYC)', 'ai', 'Day 6'), 400);
@@ -2453,20 +3111,21 @@ function renderStep10() {
 }
 
 // ============================================================
-// STEP 11 — Recap
+// STEP 12 — Recap
 // ============================================================
-function renderStep11() {
+function renderStep12() {
   setTimeout(() => {
     addCDPEvent('All marketing channels suppressed · onboarding mode', 'jo', 'Day 6');
     setTimeout(() => addCDPEvent('Customer journey complete: lead → customer in 6 days', 'cdp', 'Day 6'), 600);
   }, 300);
 
   const journey = [
-    { day: 'Day 0', text: 'Anonymous Instagram post about Banff and Jackson Hole', d: 'instagram' },
-    { day: 'Day 0', text: 'Lead Discovery agent captured signal in 47ms', d: 'cdp' },
-    { day: 'Day 0', text: 'LLM agent scored intent 78/100, extracted 7 hooks', d: 'ai' },
-    { day: 'Day 0', text: 'Identity stitched: Instagram + email + phone + history', d: 'cdp' },
-    { day: 'Day 1', text: 'Empathetic email · "We saw your Banff post"', d: 'email' },
+    { day: 'Pre-Day 0', text: 'Existing customer (Cancun 2023) · email + SMS opt-in on file', d: 'cdp' },
+    { day: 'Day 0', text: 'Public Instagram post detected via Brandwatch', d: 'instagram' },
+    { day: 'Day 0', text: 'Identity stitched in 47ms: matched to existing customer VC_8472', d: 'cdp' },
+    { day: 'Day 0', text: 'LLM agent scored intent 78/100, extracted 7 personalization hooks', d: 'ai' },
+    { day: 'Day 0', text: 'Marketing consent verified: lawful basis confirmed', d: 'cdp' },
+    { day: 'Day 1', text: 'Empathetic email · "The Rockies called" (3 photo attachments)', d: 'email' },
     { day: 'Day 2', text: 'SMS with Lake Louise larch photo link', d: 'sms' },
     { day: 'Day 3', text: 'Instagram DM · 5 Banff trails locals keep quiet', d: 'instagram' },
     { day: 'Day 3-4', text: 'Retargeting ads · 247 impressions, 8 clicks, 3.2% CTR', d: 'ads' },
@@ -2478,7 +3137,7 @@ function renderStep11() {
   ];
 
   return `
-    ${banner('Summary', 'Anonymous social signal → confirmed booking in 6 days · 6 systems orchestrated.', 'var(--green-600)')}
+    ${banner('Summary', 'Dormant customer reactivated → confirmed booking in 6 days · 6 compliant systems.', 'var(--green-600)')}
 
     <div class="stats-grid">
       <div class="stat-card">
@@ -2567,14 +3226,14 @@ function renderStep11() {
 
     <div class="summary-card">
       <div class="summary-eyebrow">The result</div>
-      <div class="summary-title">Anonymous lead → confirmed booking in 6 days</div>
+      <div class="summary-title">Dormant customer → confirmed booking in 6 days</div>
       <div class="summary-subtitle">
-        Discovered → profiled → nurtured → escalated → acquired<br>
-        Without a single form fill. Without a generic message. Without manual marketer effort.
+        Detected → re-engaged → nurtured → escalated → converted<br>
+        Every touchpoint compliant. Every signal traced. Every system orchestrated.
       </div>
       <div class="summary-divider">
-        <strong>Industry benchmark:</strong> 30-90 days, 8-12% conversion rate<br>
-        <strong>Voyage Concierge:</strong> 6 days, 92% conversion probability achieved
+        <strong>Industry benchmark for dormant reactivation:</strong> 90-180 days, 3-5% conversion rate<br>
+        <strong>Voyage Concierge:</strong> 6 days, 92% conversion probability — within full compliance
       </div>
     </div>
 
@@ -2588,7 +3247,7 @@ function renderStep11() {
 const STEP_RENDERERS = [
   renderStep1, renderStep2, renderStep3, renderStep4,
   renderStep5, renderStep6, renderStep7, renderStep8,
-  renderStep9, renderStep10, renderStep11
+  renderStep9, renderStep10, renderStep11, renderStep12
 ];
 
 function goToStep(step) {
